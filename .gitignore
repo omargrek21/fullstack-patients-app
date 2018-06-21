@@ -1,0 +1,4 @@
+data/
+patients-api/node_modules/
+patients-frontend/node_modules/
+mongod

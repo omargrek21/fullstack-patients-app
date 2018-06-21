@@ -1,0 +1,15 @@
+{
+  "name": "patients-app",
+  "version": "1.0.0",
+  "description": "App with data of Venemergencia patients",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Omar Perez",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3",
+    "mongoose": "^5.1.6"
+  }
+}
