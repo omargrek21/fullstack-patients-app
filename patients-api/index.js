@@ -3,7 +3,13 @@ var express = require('express'),
     port = process.env.PORT || 3000,
     patientRoutes = require('./routes/patients'),
     fs = require('fs'),
-    csv = require('fast-csv');
+    csv = require('fast-csv'),
+    bodyParser = require('body-parser'),
+    fileUpload = require('express-fileupload');
+    
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(fileUpload());
 
 app.get('/', function(req, res){
     console.log("starting read .csv file");
