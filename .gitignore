@@ -1,4 +1,6 @@
 data/
 patients-api/node_modules/
+patients-api/uploads/
 patients-frontend/node_modules/
 mongod
+patients-frontend/.env.development

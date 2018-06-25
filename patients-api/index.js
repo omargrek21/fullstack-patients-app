@@ -12,9 +12,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(fileUpload());
 
 app.get('/', function(req, res){
-    console.log("starting read .csv file");
-    let patientsArr = [];
-    
+    /*let patientsArr = [];
     var stream = fs.createReadStream("csvexample.csv");
     csv
      .fromStream(stream, {headers: ["dni", "titular_dni", "full_name", "birth_date", "location", "type", "owner", "branch", "insurance_company"]})
@@ -22,10 +20,11 @@ app.get('/', function(req, res){
          patientsArr.push(data);
      })
      .on("end", function(){
-         console.log("done");
-         console.log(patientsArr);
+         console.log("done test");
+         console.log(patientsArr.length);
      });
-    
+     console.log("ejecutando"); */
+    console.log("hello from the root route")
     res.send("hello from the root route");
 });
 
