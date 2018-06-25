@@ -15,7 +15,7 @@ router.post('/', (req,res) => {
     csvFile.mv(csvPath, (err) => {
     if (err) return res.status(500).json(err);
     console.log("upload sucess");
-    //parseData(csvPath, res);
+    parseData(csvPath, res);
     
   
     
