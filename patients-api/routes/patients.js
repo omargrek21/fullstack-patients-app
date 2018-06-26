@@ -47,12 +47,14 @@ function parseData(path, res){
 }
 
 function saveToDb(data, res, uploadObject){
-    db.Patient.collection.insert(data, { writeConcern: { w: "majority", wtimeout: 300000 } })
+    db.Patient.collection.insert(data, { writeConcern: { w: "majority", wtimeout: 900000 } })
     .then(function(newData){
+        console.log("Insert finished");
         let response = {...uploadObject, 'created_on_db' : true};
         res.json(response);
     })
     .catch(function(err){
+        console.log("error inserting data:", error);
         res.send(err);
     });
 }
