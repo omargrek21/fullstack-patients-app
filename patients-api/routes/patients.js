@@ -30,7 +30,9 @@ function parseData(path, res){
          patientsArr.push(data);
      })
      .on("end", function(){
-         if(cleanData){
+         console.log("cleanData on parser is:", cleanData);
+         if(cleanData == true){
+            console.log("entro donde no debe");
             const insurance_company = patientsArr[0].insurance_company;
             cleanDB(insurance_company);
          }
@@ -45,7 +47,7 @@ function parseData(path, res){
 }
 
 function saveToDb(data, res, uploadObject){
-    db.Patient.create(data)
+    db.Patient.collection.insert(data, { writeConcern: { w: "majority", wtimeout: 300000 } })
     .then(function(newData){
         let response = {...uploadObject, 'created_on_db' : true};
         res.json(response);
