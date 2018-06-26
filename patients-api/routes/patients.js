@@ -9,6 +9,7 @@ var express = require('express'),
     
 router.post('/', (req,res) => {
     cleanData = req.body.cleanData;
+    console.log("Borrar data previa?", cleanData);
     if (!req.files) return res.status(400).json({error:'No file uploaded'});
     let csvFile = req.files.selectedFile;
     const csvPath = UPLOAD_PATH + csvFile.name;
