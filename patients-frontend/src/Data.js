@@ -1,21 +1,27 @@
 import React, { Component } from 'react';
 import PatientItem from './PatientItem';
 import Upload from './Upload';
-const APIURL = '/api/patients';
+import Search from './Search';
+//const APIURL = '/api/patients';
 
 class Data extends Component {
     constructor(props){
       super(props);
       this.state = {
         patients : [],
-        longitud : 0
       }
+      this.handleData = this.handleData.bind(this);
     }
     
-    componentWillMount() {
+    /*componentWillMount() {
       fetch(APIURL)
       .then(response => response.json())
       .then(patients => this.setState({patients}));
+    }*/
+    
+    handleData(data){
+      const patients = [...data];
+      this.setState({patients});
     }
     
     render() {
@@ -29,6 +35,7 @@ class Data extends Component {
         return(
           <div>
             <Upload />
+            <Search onData = {this.handleData} />
             <table>
             <thead>
               <tr>
