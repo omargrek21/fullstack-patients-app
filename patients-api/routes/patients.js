@@ -7,8 +7,8 @@ var express = require('express'),
     const UPLOAD_PATH = './uploads/';
     
 router.post('/', (req,res) => {
-    const cleanData = req.body.cleanData;
-    console.log("Borrar data previa?", cleanData);
+    const cleanData = !req.body.cleanData;
+    console.log("Conservar data?", cleanData);
     if (!req.files) return res.status(400).json({error:'No file uploaded'});
     let csvFile = req.files.selectedFile;
     const csvPath = UPLOAD_PATH + csvFile.name;
@@ -29,9 +29,9 @@ function parseData(path, res, cleanData){
          patientsArr.push(data);
      })
      .on("end", function(){
-         console.log("cleanData on parser is:", cleanData);
-         if(cleanData){
-            console.log("entro donde no debe");
+         console.log("cleanData (inversa) on parser is:", cleanData);
+         if(!cleanData){
+            console.log("Ejecutará limpieza");
             const insurance_company = patientsArr[0].insurance_company;
             cleanDB(insurance_company);
          }
