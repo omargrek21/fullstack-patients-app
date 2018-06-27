@@ -41,7 +41,8 @@ const APIURL = '/api/patients';
       .then(response => response.json())
       .then(data => {
         console.log(data);
-        if(data.upload && data.created_on_db) {
+        console.log("data.uploaded typeof:", data.uploaded);
+        if(data.uploaded) {
           this.setState({status:'Archivo cargado exitosamente',selectedFile: '',cleanData: false});
           document.getElementById('selectedFile').value = null;
         } else {
