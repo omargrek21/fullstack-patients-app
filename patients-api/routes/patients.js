@@ -31,7 +31,7 @@ function parseData(path, res){
      })
      .on("end", function(){
          console.log("cleanData on parser is:", cleanData);
-         if(cleanData == true){
+         if(cleanData){
             console.log("entro donde no debe");
             const insurance_company = patientsArr[0].insurance_company;
             cleanDB(insurance_company);
