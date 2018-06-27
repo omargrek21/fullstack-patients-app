@@ -5,10 +5,9 @@ var express = require('express'),
     csv = require('fast-csv'),
     fileUpload = require('express-fileupload');
     const UPLOAD_PATH = './uploads/';
-    let cleanData = false;
     
 router.post('/', (req,res) => {
-    cleanData = req.body.cleanData;
+    const cleanData = req.body.cleanData;
     console.log("Borrar data previa?", cleanData);
     if (!req.files) return res.status(400).json({error:'No file uploaded'});
     let csvFile = req.files.selectedFile;
@@ -16,12 +15,12 @@ router.post('/', (req,res) => {
     csvFile.mv(csvPath, (err) => {
         if (err) return res.status(500).json(err);
         console.log("upload sucess");
-        parseData(csvPath, res);
+        parseData(csvPath, res, cleanData);
     });
 });
 
 
-function parseData(path, res){
+function parseData(path, res, cleanData){
     let patientsArr = [];
     var stream = fs.createReadStream(path);
     csv
