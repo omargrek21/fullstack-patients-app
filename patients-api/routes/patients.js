@@ -11,7 +11,7 @@ router.post('/', (req,res) => {
     let csvFile = req.files.selectedFile;
     const csvPath = UPLOAD_PATH + csvFile.name;
     const cleanData = req.body.cleanData;
-    const fileSaved = csvFile.mv(csvPath, (err) => {
+    const fileSaved = async () => await csvFile.mv(csvPath, (err) => {
                         if (err) return res.status(500).json(err);
                         console.log("File uploaded and saved successfully");
                         return true;
