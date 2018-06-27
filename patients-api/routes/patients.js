@@ -16,6 +16,8 @@ router.post('/', (req,res) => {
                         console.log("File uploaded and saved successfully");
                         return true;
                     });
+    console.log("typeof:", typeof fileSaved);
+    console.log("fileSaved:", fileSaved);
     if(fileSaved){
         console.log("entro en fileSaved");
         let patientsData = async () => await parseData(csvPath, res);
