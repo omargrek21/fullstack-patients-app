@@ -7,19 +7,37 @@ var express = require('express'),
     const UPLOAD_PATH = './uploads/';
     
 router.post('/', (req,res) => {
-    const cleanData = req.body.cleanData;
     if (!req.files) return res.status(400).json({error:'No file uploaded'});
     let csvFile = req.files.selectedFile;
     const csvPath = UPLOAD_PATH + csvFile.name;
-    csvFile.mv(csvPath, (err) => {
-        if (err) return res.status(500).json(err);
-        console.log("upload sucess");
-        parseData(csvPath, res, cleanData);
-    });
+    const cleanData = req.body.cleanData;
+    const fileSaved = csvFile.mv(csvPath, (err) => {
+                        if (err) return res.status(500).json(err);
+                        console.log("File uploaded and saved successfully");
+                        return true;
+                    });
+    if(fileSaved){
+        console.log("entro en fileSaved");
+        let patientsData = async () => await parseData(csvPath, res);
+        if(cleanData === 'true'){
+            const insurance_company = patientsData[0].insurance_company;
+            console.log("Limpieza de datos previos de aseguradora:", insurance_company);
+            let dataErased = async() => await cleanDB(insurance_company);
+        }
+        let dataInserted = async () => await saveToDb(patientsData);
+        const uploadObject = {
+            uploaded:true, 
+            path: csvPath,
+            records_parsed: patientsData.length,
+            recors_inserted: dataInserted.length
+        };
+        res.json(uploadObject);
+    }
 });
 
 
-function parseData(path, res, cleanData){
+
+async function parseData(path, res){
     let patientsArr = [];
     var stream = fs.createReadStream(path);
     csv
@@ -28,10 +46,12 @@ function parseData(path, res, cleanData){
          patientsArr.push(data);
      })
      .on("end", function(){
-         if(cleanData === 'true'){
+         console.log(".csv file read ended");
+         return patientsArr;
+         /*if(cleanData === 'true'){
             const insurance_company = patientsArr[0].insurance_company;
             console.log("Limpieza de datos previos de aseguradora:", insurance_company);
-            cleanDB(insurance_company);
+            let dataErased = async() => await cleanDB(insurance_company);
          }
          console.log("csv read ended");
          const uploadObject = {
@@ -39,20 +59,17 @@ function parseData(path, res, cleanData){
              path: path,
              records_readed: patientsArr.length
          };
-         saveToDb(patientsArr,res, uploadObject);
+         saveToDb(patientsArr,res, uploadObject); */
      }); 
 }
 
-function saveToDb(data, res, uploadObject){
+async function saveToDb(data){
     db.Patient.collection.insert(data)
     .then(function(newData){
-        console.log("Insert finished");
-        let response = {...uploadObject, 'created_on_db' : true};
-        res.json(response);
+        return newData;
     })
     .catch(function(err){
-        console.log("error inserting data:", err);
-        res.send(err);
+        return err;
     });
 }
 
@@ -77,13 +94,13 @@ router.get('/', function(req,res) {
    }); 
 });
 
-function cleanDB(insurance_company){
+async function cleanDB(insurance_company){
     db.Patient.deleteMany({ "insurance_company" : insurance_company })
     .then(function(response){
-        console.log(response);
+        return response;
     })
     .catch(function(err){
-        console.log(err);
+        return err;
     })
 }
 
