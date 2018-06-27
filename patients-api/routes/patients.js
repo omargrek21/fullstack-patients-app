@@ -11,15 +11,9 @@ router.post('/', (req,res) => {
     let csvFile = req.files.selectedFile;
     const csvPath = UPLOAD_PATH + csvFile.name;
     const cleanData = req.body.cleanData;
-    const fileSaved = async () => await csvFile.mv(csvPath, (err) => {
-                        if (err) return res.status(500).json(err);
-                        console.log("File uploaded and saved successfully");
-                        return true;
-                    });
-    console.log("typeof:", typeof fileSaved);
-    console.log("fileSaved:", fileSaved);
-    if(fileSaved){
-        console.log("entro en fileSaved");
+    csvFile.mv(csvPath, (err) => {
+        if (err) return res.status(500).json(err);
+        console.log("File uploaded and saved successfully");
         let patientsData = async () => await parseData(csvPath, res);
         if(cleanData === 'true'){
             const insurance_company = patientsData[0].insurance_company;
@@ -34,7 +28,7 @@ router.post('/', (req,res) => {
             recors_inserted: dataInserted.length
         };
         res.json(uploadObject);
-    }
+    });
 });
 
 
