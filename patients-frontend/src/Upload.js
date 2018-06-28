@@ -38,10 +38,23 @@ const APIURL = '/api/patients';
         method: "POST",
         body: formData
       })
-      .then(response => response.json())
+      .then(resp => {
+        if(!resp.ok) {
+          if(resp.status >=400 && resp.status < 500) {
+            return resp.json().then(data => {
+              let err = {errorMessage: data.message};
+              this.setState({status:'error: ' + data.message});
+              throw err;
+            })
+          } else {
+            let err = {errorMessage: 'Please try again later, server is not responding'};
+            this.setState({status:'Por favor intente de nuevo más tarde, el servidor no está respondiendo'});
+            throw err;
+          }
+        }
+        return resp.json()
+      })
       .then(data => {
-        console.log(data);
-        console.log("data.uploaded typeof:", data.uploaded);
         if(data.uploaded) {
           this.setState({status:'Archivo cargado exitosamente',selectedFile: '',cleanData: false});
           document.getElementById('selectedFile').value = null;

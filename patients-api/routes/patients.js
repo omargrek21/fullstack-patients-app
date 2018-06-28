@@ -5,6 +5,39 @@ var express = require('express'),
     csv = require('fast-csv'),
     fileUpload = require('express-fileupload');
     const UPLOAD_PATH = './uploads/';
+
+router.get('/', function(req,res) {
+   db.Patient.find()
+   .limit(20)
+   .then(function(patients){
+       res.json(patients);
+   })
+   .catch(function(err){
+        res.send(err);
+   }); 
+});
+
+router.get('/:patientDni', function(req,res){
+    db.Patient.find({'titular_dni': req.params.patientDni})
+    .then(function(patients){
+        res.json(patients);
+    })
+    .catch(function(err){
+        res.send(err);
+    }); 
+});
+
+router.post('/', (req,res) => {
+    if (!req.files) return res.status(400).json({error:'No file uploaded'});
+    let csvFile = req.files.selectedFile;
+    const csvPath = UPLOAD_PATH + csvFile.name;
+    const cleanData = req.body.cleanData;
+    csvFile.mv(csvPath, (err) => {
+        if (err) return res.status(500).json(err);
+        console.log("File uploaded and saved successfully");
+        processFile(csvPath,cleanData,res);
+    });
+});
     
 async function processFile(csvPath,cleanData,res){
     let patientsData = [];
@@ -40,17 +73,7 @@ async function processFile(csvPath,cleanData,res){
     } 
 }
 
-router.post('/', (req,res) => {
-    if (!req.files) return res.status(400).json({error:'No file uploaded'});
-    let csvFile = req.files.selectedFile;
-    const csvPath = UPLOAD_PATH + csvFile.name;
-    const cleanData = req.body.cleanData;
-    csvFile.mv(csvPath, (err) => {
-        if (err) return res.status(500).json(err);
-        console.log("File uploaded and saved successfully");
-        processFile(csvPath,cleanData,res);
-    });
-});
+
 
 function parseData(path){
     return new Promise(function(resolve,reject){
@@ -82,26 +105,8 @@ async function saveToDb(data){
     });*/
 }
 
-router.get('/:patientDni', function(req,res){
-    db.Patient.find({ 'titular_dni': req.params.patientDni })
-    .then(function(patients){
-        res.json(patients);
-    })
-    .catch(function(err){
-        res.send(err);
-    }); 
-});
 
-router.get('/', function(req,res) {
-   db.Patient.find()
-   .limit(20)
-   .then(function(patients){
-       res.json(patients);
-   })
-   .catch(function(err){
-        res.send(err);
-   }); 
-});
+
 
 async function cleanDB(insurance_company){
     return db.Patient.deleteMany({ "insurance_company" : insurance_company });
