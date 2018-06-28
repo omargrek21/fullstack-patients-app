@@ -68,7 +68,7 @@ async function processFile(csvPath,cleanData,res){
     
     try {
         let dataInserted = await saveToDb(patientsData);
-        console.log(`${dataInserted.length} registros guardados en base de datos exitosamente`);
+        console.log(`${dataInserted} registros guardados en base de datos exitosamente`);
         const uploadObject = {
             success:true, 
             path: csvPath,
