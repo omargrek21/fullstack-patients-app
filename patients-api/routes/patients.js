@@ -73,7 +73,7 @@ async function processFile(csvPath,cleanData,res){
             success:true, 
             path: csvPath,
             records_parsed: patientsData.length, 
-            records_inserted: dataInserted.length
+            records_inserted: dataInserted
         };
         res.json(uploadObject);
     } catch(e){
