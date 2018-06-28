@@ -43,12 +43,12 @@ const APIURL = '/api/patients';
           if(resp.status >=400 && resp.status < 500) {
             return resp.json().then(data => {
               let err = {errorMessage: data.error};
-              this.setState({status:'error: ' + data.error});
+              this.setState({status:data.error});
               throw err;
             })
           } else {
             let err = {errorMessage: 'Please try again later, server is not responding'};
-            this.setState({status:'Por favor intente de nuevo más tarde, el servidor no está respondiendo'});
+            this.setState({status:'Por favor intente de nuevo más tarde, servidor no disponible'});
             throw err;
           }
         }
@@ -56,7 +56,7 @@ const APIURL = '/api/patients';
       })
       .then(data => {
         console.log(data);
-        if(data.uploaded) {
+        if(data.success) {
           this.setState({status:'Archivo cargado exitosamente',selectedFile: '',cleanData: false});
           document.getElementById('selectedFile').value = null;
         } else {

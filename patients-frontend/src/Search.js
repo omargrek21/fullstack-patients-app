@@ -23,7 +23,7 @@ const APIURL = '/api/patients/';
             if(resp.status >=400 && resp.status < 500) {
               return resp.json().then(data => {
                 let err = {errorMessage: data.error};
-                this.setState({status:'error: ' + data.error});
+                this.setState({status:data.error});
                 throw err;
               })
             } else {
