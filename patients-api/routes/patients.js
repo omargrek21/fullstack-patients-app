@@ -28,7 +28,7 @@ router.get('/:patientDni', function(req,res){
 });
 
 router.post('/', (req,res) => {
-    if (!req.files) return res.status(400).json({error:'No file uploaded'});
+    if (!req.files) return res.status(400).json({error:'No se ha recibido archivo'});
     let csvFile = req.files.selectedFile;
     const csvPath = UPLOAD_PATH + csvFile.name;
     const cleanData = req.body.cleanData;

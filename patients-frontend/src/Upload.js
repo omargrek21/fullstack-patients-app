@@ -42,8 +42,8 @@ const APIURL = '/api/patients';
         if(!resp.ok) {
           if(resp.status >=400 && resp.status < 500) {
             return resp.json().then(data => {
-              let err = {errorMessage: data.message};
-              this.setState({status:'error: ' + data.message});
+              let err = {errorMessage: data.error};
+              this.setState({status:'error: ' + data.error});
               throw err;
             })
           } else {
@@ -55,6 +55,7 @@ const APIURL = '/api/patients';
         return resp.json()
       })
       .then(data => {
+        console.log(data);
         if(data.uploaded) {
           this.setState({status:'Archivo cargado exitosamente',selectedFile: '',cleanData: false});
           document.getElementById('selectedFile').value = null;

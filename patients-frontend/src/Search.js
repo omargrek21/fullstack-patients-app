@@ -22,8 +22,8 @@ const APIURL = '/api/patients/';
           if(!resp.ok) {
             if(resp.status >=400 && resp.status < 500) {
               return resp.json().then(data => {
-                let err = {errorMessage: data.message};
-                this.setState({status:'error: ' + data.message});
+                let err = {errorMessage: data.error};
+                this.setState({status:'error: ' + data.error});
                 throw err;
               })
             } else {
@@ -37,6 +37,8 @@ const APIURL = '/api/patients/';
         .then(data => {
           if(data.length === 0){
             this.setState({status:'Cédula no registrada'});
+          } else {
+            this.setState({status:''});
           }
           this.props.onData(data);
         });
