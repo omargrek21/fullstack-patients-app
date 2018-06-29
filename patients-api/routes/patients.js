@@ -96,7 +96,10 @@ function parseData(path){
              })
              .on("end", function(){
                 resolve(patientsArr); 
-             }); 
+             })
+             .on("error", function(e){
+                reject('Error parsing .csv file:', e);
+             })
             
         } catch(e) {
             reject('Error parsing .csv file:', e);
