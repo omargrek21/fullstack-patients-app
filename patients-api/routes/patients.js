@@ -88,19 +88,19 @@ function parseData(path){
     return new Promise(function(resolve,reject){
         let patientsArr = [];
         var stream = fs.createReadStream(path);
-        csv
-         .fromStream(stream, {headers: ["dni", "titular_dni", "full_name", "birth_date", "location", "type", "owner", "branch", "insurance_company"]})
-         .on("data", function(data){
-             patientsArr.push(data);
-         })
-         .on("end", function(){
-             if(patientsArr.length > 0){
+        try{
+            csv
+            .fromStream(stream, {headers: ["dni", "titular_dni", "full_name", "birth_date", "location", "type", "owner", "branch", "insurance_company"]})
+             .on("data", function(data){
+                 patientsArr.push(data);
+             })
+             .on("end", function(){
                 resolve(patientsArr); 
-             }
-             else {
-                reject('Error parsing .csv file');
-             }
-         }); 
+             }); 
+            
+        } catch(e) {
+            reject('Error parsing .csv file:', e);
+        }
     });
 }
 
