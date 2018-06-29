@@ -49,7 +49,7 @@ async function processFile(csvPath,cleanData,res){
         patientsData = await parseData(csvPath);
         console.log(`Lectura del archivo ${csvPath} completada con ${patientsData.length} registros`);
     } catch(e){
-        const customError = `Error durante la lectura del archivo ${csvPath}`;
+        const customError = `Error durante la lectura del archivo ${csvPath}, detalle: ${e}`;
         console.log(customError);
         return res.status(400).json({error:customError});
     }
