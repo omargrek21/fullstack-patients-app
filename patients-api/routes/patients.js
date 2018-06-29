@@ -98,11 +98,11 @@ function parseData(path){
                 resolve(patientsArr); 
              })
              .on("error", function(e){
-                reject('Error parsing .csv file:', e);
+                reject(e);
              })
             
         } catch(e) {
-            reject('Error parsing .csv file:', e);
+            reject(e);
         }
     });
 }
