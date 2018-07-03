@@ -6,15 +6,16 @@ var express = require('express'),
 router.post('/login', function(req,res){
     db.User.find({'username': req.body.username})
     .then(function(user){
-        let logged = false;
-        if(req.body.password === user.password){
+        let auth = false;
+        const password = user.password;
+        if(req.body.password === password){
           console.log("entro aca");
-          logged = true;
+          auth = true;
         }
         console.log("typeof password recibido:", typeof req.body.password);
-        console.log("typeof password query:", typeof user.password)
+        console.log("typeof password query mongodb:", typeof password)
         res.json({
-           auth: logged,
+           auth,
            userFound: user,
            userPost: req.body
        });
