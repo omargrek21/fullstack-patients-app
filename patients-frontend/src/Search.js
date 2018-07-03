@@ -22,12 +22,12 @@ const APIURL = '/api/patients/';
           if(!resp.ok) {
             if(resp.status >=400 && resp.status < 500) {
               return resp.json().then(data => {
-                let err = {errorMessage: data.error};
-                this.setState({status:data.error});
+                let err = {errorMessage: data.errorDetail};
+                this.setState({status:data.errorMsg});
                 throw err;
               })
             } else {
-              let err = {errorMessage: 'Please try again later, server is not responding'};
+              let err = {errorMessage: 'Server down, check status'};
               this.setState({status:'Por favor intente de nuevo más tarde, el servidor no está respondiendo'});
               throw err;
             }
@@ -35,12 +35,17 @@ const APIURL = '/api/patients/';
           return resp.json()
         })
         .then(data => {
-          if(data.length === 0){
-            this.setState({status:'Cédula no registrada'});
+          console.log(data);
+          if(data.success){
+            if(data.length === 0){
+              this.setState({status:'Cédula no registrada'});
+            } else {
+              this.setState({status:''});
+            }
+            this.props.onData(data.patients);
           } else {
-            this.setState({status:''});
+            this.setState({status:data.errorMsg});
           }
-          this.props.onData(data);
         });
     }
 

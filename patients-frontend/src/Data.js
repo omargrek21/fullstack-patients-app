@@ -20,6 +20,7 @@ class Data extends Component {
     }*/
     
     handleData(data){
+      console.log("recibido:", data);
       const patients = [...data];
       this.setState({patients});
     }

@@ -10,29 +10,31 @@ router.get('/', function(req,res) {
    db.Patient.find()
    .limit(20)
    .then(function(patients){
-       res.json(patients);
+       res.json({
+           success: true,
+           patients: patients
+       });
    })
    .catch(function(err){
-        const customError = `Error: ${err}`;
-        console.log(customError);
-        return res.status(400).json({error:customError});
+       handleError(res,err,'Ha ocurrido un error obteniendo la data');
    }); 
 });
 
 router.get('/:patientDni', function(req,res){
     db.Patient.find({'titular_dni': req.params.patientDni})
     .then(function(patients){
-        res.json(patients);
+        res.json({
+           success: true,
+           patients: patients
+       });
     })
     .catch(function(err){
-        const customError = `Error: ${err}`;
-        console.log(customError);
-        return res.status(400).json({error:customError});
+        handleError(res,err,'Ha ocurrido un error obteniendo la data');
     }); 
 });
 
 router.post('/', (req,res) => {
-    if (!req.files) return res.status(400).json({error:'Error: no se ha recibido ningún archivo en el servidor'});
+    if (!req.files) return res.status(400).json({errorMsg:'¡No has cargado ningún archivo, intenta de nuevo!', errorDetail:'No file uploaded'});
     let csvFile = req.files.selectedFile;
     const csvPath = UPLOAD_PATH + csvFile.name;
     const cleanData = req.body.cleanData;
@@ -49,9 +51,7 @@ async function processFile(csvPath,cleanData,res){
         patientsData = await parseData(csvPath);
         console.log(`Lectura del archivo ${csvPath} completada con ${patientsData.length} registros`);
     } catch(e){
-        const customError = `Error durante la lectura del archivo ${csvPath}, detalle: ${e}`;
-        console.log(customError);
-        return res.status(400).json({error:customError});
+        handleError(res,e,`Error en la lectura del archivo .csv, verifique la estructura`);
     }
     
     if(cleanData === 'true'){
@@ -60,9 +60,7 @@ async function processFile(csvPath,cleanData,res){
             let dataErased = await cleanDB(insurance_company);
             console.log(`Data previa de ${insurance_company} eliminada exitosamente`);
         } catch(e){
-            const customError = `Error eliminando data previa de ${insurance_company}`;
-            console.log(customError);
-            return res.status(400).json({error:customError});
+            handleError(res,e,`Error eliminando data previa de ${insurance_company}`);
         }
     }
     
@@ -78,9 +76,7 @@ async function processFile(csvPath,cleanData,res){
         };
         res.json(uploadObject);
     } catch(e){
-        const customError = `Error guardando los registros en la base de datos`;
-        console.log(customError);
-        return res.status(400).json({error:customError});
+        handleError(res,e,`Error guardando los registros en la base de datos`);
     } 
 }
 
@@ -113,6 +109,13 @@ async function saveToDb(data){
 
 async function cleanDB(insurance_company){
     return db.Patient.deleteMany({"insurance_company" : insurance_company});
+}
+
+function handleError(res,err,msg){
+    return res.status(400).json({
+        errorMsg: msg,
+        errorDetail:err
+    });
 }
 
 module.exports = router;
