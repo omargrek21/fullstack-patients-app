@@ -2,6 +2,7 @@ var express = require('express'),
     app = express(),
     port = process.env.PORT || 3000,
     patientRoutes = require('./routes/patients'),
+    userRoutes = require('./routes/users'),
     fs = require('fs'),
     csv = require('fast-csv'),
     bodyParser = require('body-parser'),
@@ -12,23 +13,12 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(fileUpload());
 
 app.get('/', function(req, res){
-    /*let patientsArr = [];
-    var stream = fs.createReadStream("csvexample.csv");
-    csv
-     .fromStream(stream, {headers: ["dni", "titular_dni", "full_name", "birth_date", "location", "type", "owner", "branch", "insurance_company"]})
-     .on("data", function(data){
-         patientsArr.push(data);
-     })
-     .on("end", function(){
-         console.log("done test");
-         console.log(patientsArr.length);
-     });
-     console.log("ejecutando"); */
-    console.log("hello from the root route")
-    res.send("hello from the root route");
+    console.log("On root route");
+    res.send("On root route");
 });
 
 app.use('/api/patients', patientRoutes);
+app.use('/api/users', userRoutes);
 
 app.listen(port, function(){
     console.log("APP IS RUNNING ON PORT " + port);
