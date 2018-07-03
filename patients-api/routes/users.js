@@ -8,10 +8,15 @@ router.post('/login', function(req,res){
     .then(function(user){
         let logged = false;
         if(req.body.password === user.password){
+          console.log("entro aca");
           logged = true;
         }
+        console.log("typeof password recibido:", typeof req.body.password);
+        console.log("typeof password query:", typeof user.password)
         res.json({
-           auth: logged
+           auth: logged,
+           userFound: user,
+           userPost: req.body
        });
     })
     .catch(function(err){
