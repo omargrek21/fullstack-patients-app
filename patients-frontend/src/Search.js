@@ -37,7 +37,7 @@ const APIURL = '/api/patients/';
         .then(data => {
           console.log(data);
           if(data.success){
-            if(data.length === 0){
+            if(data.patients.length === 0){
               this.setState({status:'Cédula no registrada'});
             } else {
               this.setState({status:''});
