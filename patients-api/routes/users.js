@@ -7,7 +7,7 @@ router.post('/login', function(req,res){
     db.User.find({'username': req.body.username})
     .then(function(user){
         let auth = false;
-        const password = user.password;
+        const password = user[0].password;
         if(req.body.password === password){
           console.log("entro aca");
           auth = true;
