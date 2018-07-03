@@ -4,7 +4,9 @@ var express = require('express'),
     fs = require('fs'),
     csv = require('fast-csv'),
     fileUpload = require('express-fileupload');
-    const UPLOAD_PATH = './uploads/';
+const UPLOAD_PATH = './uploads/';
+let rowFlag = 0;
+
 
 router.get('/', function(req,res) {
    db.Patient.find()
@@ -51,7 +53,7 @@ async function processFile(csvPath,cleanData,res){
         patientsData = await parseData(csvPath);
         console.log(`Lectura del archivo ${csvPath} completada con ${patientsData.length} registros`);
     } catch(e){
-        handleError(res,e,`Error en la lectura del archivo .csv, verifique la estructura`);
+        handleError(res,e,`Error en la lectura del archivo en la linea ${rowFlag}, verifique su estructura`);
     }
     
     if(cleanData === 'true'){
@@ -88,6 +90,7 @@ function parseData(path){
             csv
             .fromStream(stream, {headers: ["dni", "titular_dni", "full_name", "birth_date", "location", "type", "owner", "branch", "insurance_company"]})
              .on("data", function(data){
+                 rowFlag++;
                  patientsArr.push(data);
              })
              .on("end", function(){
