@@ -57,7 +57,7 @@ const APIURL = '/api/patients/';
             <input
               type="text"
               name="dni"
-              placeholder="Filtrar por CI"
+              placeholder="CI beneficiario"
               value={dni}
               onChange={(e) => this.setState({[e.target.name]: e.target.value })}
             />

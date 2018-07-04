@@ -1,4 +1,4 @@
-var express = require('express'),
+const express = require('express'),
     app = express(),
     port = process.env.PORT || 3000,
     patientRoutes = require('./routes/patients'),
@@ -7,7 +7,10 @@ var express = require('express'),
     csv = require('fast-csv'),
     bodyParser = require('body-parser'),
     fileUpload = require('express-fileupload');
-    
+    cors = require('cors'),
+    morgan = require('morgan');
+
+app.use(morgan('tiny'));    
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(fileUpload());

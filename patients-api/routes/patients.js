@@ -1,10 +1,10 @@
-var express = require('express'),
+const express = require('express'),
     router = express.Router(),
     db = require('../models'),
     fs = require('fs'),
     csv = require('fast-csv'),
-    fileUpload = require('express-fileupload');
-const UPLOAD_PATH = './uploads/';
+    fileUpload = require('express-fileupload'),
+    UPLOAD_PATH = './uploads/';
 
 router.get('/', function(req,res) {
    db.Patient.find()
@@ -21,7 +21,7 @@ router.get('/', function(req,res) {
 });
 
 router.get('/:patientDni', function(req,res){
-    db.Patient.find({'titular_dni': req.params.patientDni})
+    db.Patient.find({'dni': req.params.patientDni})
     .then(function(patients){
         res.json({
            success: true,

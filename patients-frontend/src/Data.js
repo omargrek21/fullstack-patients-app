@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PatientItem from './PatientItem';
 import Upload from './Upload';
 import Search from './Search';
+import './Data.css';
 //const APIURL = '/api/patients';
 
 class Data extends Component {
@@ -26,29 +27,30 @@ class Data extends Component {
     }
     
     render() {
-        const patients = this.state.patients.map(patient => (
+        const patients = this.state.patients.map((patient,index) => (
               <PatientItem
+                color = {index % 2 ===0 ? 'par' : 'impar'}
                 key = {patient._id}
                 {...patient}
               />
           ));
       
         return(
-          <div>
-            <Upload />
-            <Search onData = {this.handleData} />
-            <table>
-            <thead>
+          <div className="data">
+            
+            <Search className="findForm" onData = {this.handleData} />
+            <table className="dataTable">
+            <thead className="tableHead">
               <tr>
-                <th>CI Beneficiario</th>
-                <th>CI Titular</th>
-                <th>Nombre completo</th>
-                <th>F. Nacimiento</th>
-                <th>Ubicación</th>
-                <th>Tipo</th>
-                <th>Contratante</th>
-                <th>Ramo</th>
-                <th>Aseguradora</th>
+                <th>beneficiario</th>
+                <th>titular</th>
+                <th>nombre completo</th>
+                <th>f.nac.</th>
+                <th>ubicación</th>
+                <th>tipo</th>
+                <th>contratante</th>
+                <th>ramo</th>
+                <th>aseguradora</th>
               </tr>
             </thead>
               <tbody>

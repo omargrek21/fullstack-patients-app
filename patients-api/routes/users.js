@@ -9,11 +9,8 @@ router.post('/login', function(req,res){
         let auth = false;
         const password = user[0].password;
         if(req.body.password === password){
-          console.log("entro aca");
           auth = true;
         }
-        console.log("typeof password recibido:", typeof req.body.password);
-        console.log("typeof password query mongodb:", typeof password)
         res.json({
            auth,
            userFound: user,
