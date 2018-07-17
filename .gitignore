@@ -4,3 +4,7 @@ patients-api/uploads/
 patients-frontend/node_modules/
 mongod
 #patients-frontend/.env.development
+nohup.out
+patients-api/nohup.out
+patients-api/stderr.txt
+patients-api/stdout.txt
