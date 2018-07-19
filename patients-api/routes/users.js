@@ -4,6 +4,7 @@ var express = require('express'),
     
 
 router.post('/login', function(req,res){
+    console.log(req.body);
     db.User.find({'username': req.body.username})
     .then(function(user){
         let auth = false;
@@ -33,6 +34,20 @@ router.post('/register', function(req,res){
     .catch(function(err){
         handleError(res,err,'Ha ocurrido un error creando el nuevo usuario');
     }); 
+});
+
+router.get('/', function(req,res){
+    db.User.find()
+   .limit(20)
+   .then(function(users){
+       res.json({
+           success: true,
+           users: users
+       });
+   })
+   .catch(function(err){
+       handleError(res,err,'Ha ocurrido un error obteniendo la data');
+   });
 });
 
 function handleError(res,err,msg){

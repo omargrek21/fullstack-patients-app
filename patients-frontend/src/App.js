@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Data from './Data';
+import Login from './Login';
+import Upload from './Upload';
 import './App.css';
 import {Link, Route, Redirect} from "react-router-dom";
 
@@ -8,7 +10,10 @@ class App extends Component {
     
     return (
       <div className="App">
-        <Data />
+      <Route path="/upload" component= {Upload}> </Route>
+      <Data> </Data>
+        
+        
       </div>
     );
   }
