@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Link, Route, Redirect} from "react-router-dom";
 import Upload from './Upload';
+import './Login.css';
 const APIURL = '/api/users/login';
 
 //const APIURL = '/api/patients';
@@ -65,21 +66,25 @@ class Login extends Component {
     render() {
         const {username, password, status, logged} = this.state;
         return(
-          <div>
+          <div className="container">
               <p> Por favor valida tu acceso </p>
-              <form onSubmit={this.handleSubmit}>
+              <form className="loginForm" onSubmit={this.handleSubmit}>
                 <input
+                  className="loginInputs"
                   type="text"
                   name="username"
                   placeholder="usuario"
+                  autoComplete = "off"
                   value={username}
                   onChange={(e) => this.setState({[e.target.name]: e.target.value })}
                 />
                 <br/>
                 <input
+                  className="loginInputs"
                   type="text"
                   name="password"
                   placeholder="contraseña"
+                  autoComplete = "off"
                   value={password}
                   onChange={(e) => this.setState({[e.target.name]: e.target.value })}
                 />

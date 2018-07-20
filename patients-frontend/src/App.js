@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Data from './Data';
 import Login from './Login';
 import Upload from './Upload';
+import { Helmet } from 'react-helmet';
 import './App.css';
 import {Link, Route, Redirect} from "react-router-dom";
 
@@ -10,11 +11,11 @@ class App extends Component {
     
     return (
       <div className="App">
-      <Route path="/upload" component= {Login}> </Route>
-      <Route path="/data" component= {Data}> </Route>
-      
-        
-        
+        <Helmet>
+            <title>Data Venemergencia</title>
+          </Helmet>
+        <Route path="/upload" component= {Login}> </Route>
+        <Route path="/data" component= {Data}> </Route>
       </div>
     );
   }
