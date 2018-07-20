@@ -40,12 +40,12 @@ class Login extends Component {
             if(resp.status >=400 && resp.status < 500) {
               return resp.json().then(data => {
                 let err = {errorMessage: data.errorDetail};
-                this.setState({status:data.errorMsg});
+                this.setState({status:data.errorMsg, password:'', username:''});
                 throw err;
               })
             } else {
               let err = {errorMessage: 'Server down, check status'};
-              this.setState({status:'Por favor intente de nuevo más tarde, el servidor no está respondiendo'});
+              this.setState({status:'Por favor intente de nuevo más tarde, el servidor no está respondiendo',password:'', username:''});
               throw err;
             }
           }
@@ -54,11 +54,10 @@ class Login extends Component {
         .then(data => {
           console.log(data);
           if(data.auth){
-            this.setState({status:'Acceso concedido!'});
+            this.setState({logged:data.auth,status:'Acceso concedido!',password:'', username:''});
           } else {
-            this.setState({status:'Acceso no autorizado!'});
+            this.setState({logged:data.auth, status:'Acceso no autorizado!',password:'', username:''});
           } 
-          this.setState({logged:data.auth});
         });
     }
     
@@ -81,7 +80,7 @@ class Login extends Component {
                 <br/>
                 <input
                   className="loginInputs"
-                  type="text"
+                  type="password"
                   name="password"
                   placeholder="contraseña"
                   autoComplete = "off"
