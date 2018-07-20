@@ -8,3 +8,7 @@ nohup.out
 patients-api/nohup.out
 patients-api/stderr.txt
 patients-api/stdout.txt
+patients-frontend/stderr.txt
+patients-frontend/stdout.txt
+stderr.txt
+stdout.txt
