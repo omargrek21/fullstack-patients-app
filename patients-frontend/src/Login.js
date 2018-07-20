@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Link, Route, Redirect} from "react-router-dom";
-const APIURL = '/api/users';
+import Upload from './Upload';
+const APIURL = '/api/users/login';
 
 //const APIURL = '/api/patients';
 
@@ -25,7 +26,13 @@ class Login extends Component {
             password: password
         };
         console.log('data',data);
-        fetch(APIURL)
+        fetch(APIURL, {
+          method: 'POST',
+          headers: new Headers({
+            'Content-Type': 'application/json',
+          }),
+          body: JSON.stringify(data)
+        })
         .then(resp => {
             console.log(resp);
           if(!resp.ok) {
@@ -45,23 +52,21 @@ class Login extends Component {
         })
         .then(data => {
           console.log(data);
-          /*if(data.success){
-            if(data.patients.length === 0){
-              this.setState({status:'Cédula no registrada'});
-            } else {
-              this.setState({status:''});
-            }
-            this.props.onData(data.patients);
+          if(data.auth){
+            this.setState({status:'Acceso concedido!'});
           } else {
-            this.setState({status:data.errorMsg});
-          } */
+            this.setState({status:'Acceso no autorizado!'});
+          } 
+          this.setState({logged:data.auth});
         });
     }
     
+    
     render() {
-        const {username, password, status} = this.state;
+        const {username, password, status, logged} = this.state;
         return(
           <div>
+              <p> Por favor valida tu acceso </p>
               <form onSubmit={this.handleSubmit}>
                 <input
                   type="text"
@@ -81,6 +86,14 @@ class Login extends Component {
                 <button type="submit">Login</button>
               </form>
               <p>{status}</p>
+              {
+                
+                !logged
+                ? null
+                : (
+                    <Upload/>
+                  )
+              }
               
         </div>
         );

@@ -10,8 +10,9 @@ class App extends Component {
     
     return (
       <div className="App">
-      <Route path="/upload" component= {Upload}> </Route>
-      <Data> </Data>
+      <Route path="/upload" component= {Login}> </Route>
+      <Route path="/data" component= {Data}> </Route>
+      
         
         
       </div>

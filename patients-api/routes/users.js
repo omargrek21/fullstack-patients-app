@@ -19,7 +19,7 @@ router.post('/login', function(req,res){
        });
     })
     .catch(function(err){
-        handleError(res,err,'Ha ocurrido un error obteniendo la data');
+        handleError(res,err,'Acceso no autorizado');
     }); 
 });
 
@@ -36,7 +36,7 @@ router.post('/register', function(req,res){
     }); 
 });
 
-router.get('/', function(req,res){
+router.get('/getAll', function(req,res){
     db.User.find()
    .limit(20)
    .then(function(users){
