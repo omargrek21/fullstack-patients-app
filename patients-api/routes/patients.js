@@ -6,52 +6,68 @@ const express = require('express'),
     fileUpload = require('express-fileupload'),
     UPLOAD_PATH = './uploads/';
 
-router.get('/', function(req,res) {
+router.get('/', function(req,res,next) {
    db.Patient.find()
    .limit(20)
    .then(function(patients){
-       res.json({
+       res.status(200).json({
            success: true,
            patients: patients
        });
    })
    .catch(function(err){
-       handleError(res,err,'Ha ocurrido un error obteniendo la data');
+       //handleError(res,err,'Ha ocurrido un error obteniendo la data');
+       return next({
+            status:400,
+            message:"Ha ocurrido un error obteniendo la data"
+        })
    }); 
 });
 
-router.get('/:patientDni', function(req,res){
+router.get('/:patientDni', function(req,res,next){
     db.Patient.find({'dni': req.params.patientDni})
     .then(function(patients){
-        res.json({
+        res.status(200).json({
            success: true,
            patients: patients
        });
     })
     .catch(function(err){
-        handleError(res,err,'Ha ocurrido un error obteniendo la data');
+        return next({
+            status:400,
+            message:"Ha ocurrido un error obteniendo la data"
+        })
     }); 
 });
 
-router.post('/', (req,res) => {
-    if (!req.files) return res.status(400).json({errorMsg:'¡No has cargado ningún archivo, intenta de nuevo!', errorDetail:'No file uploaded'});
+router.post('/', (req,res,next) => {
+    if (!req.files){
+        return next({
+            status:400,
+            message:"No has cargado ningún archivo"
+        })
+    } 
     let csvFile = req.files.selectedFile;
     const csvPath = UPLOAD_PATH + csvFile.name;
     const cleanData = req.body.cleanData;
     csvFile.mv(csvPath, (err) => {
-        if (err) return res.status(500).json(err);
+        if (err) return next(err);//return res.status(500).json(err);
         console.log("Archivo recibido y guardado exitosamente en:", UPLOAD_PATH);
-        processFile(csvPath,cleanData,res);
+        processFile(csvPath,cleanData,res,next);
     });
 });
     
-async function processFile(csvPath,cleanData,res){
+async function processFile(csvPath,cleanData,res,next){
     let patientsData = [];
     try {
         patientsData = await parseData(csvPath);
         console.log(`Lectura del archivo ${csvPath} completada con ${patientsData.length} registros`);
     } catch(e){
-        handleError(res,e,`Error en la lectura del archivo en la linea ${e}, verifique su estructura`);
+        return next({
+            status:400,
+            message:`Error en la lectura del archivo en la linea ${e}, verifique su estructura`
+        })
+        //handleError(res,e,`Error en la lectura del archivo en la linea ${e}, verifique su estructura`);
     }
     
     if(cleanData === 'true'){
@@ -60,7 +76,10 @@ async function processFile(csvPath,cleanData,res){
             let dataErased = await cleanDB(insurance_company);
             console.log(`Data previa de ${insurance_company} eliminada exitosamente`);
         } catch(e){
-            handleError(res,e,`Error eliminando data previa de ${insurance_company}`);
+            return next({
+                status:400,
+                message:`Error eliminando data previa de ${insurance_company}`
+            })
         }
     }
     
@@ -74,9 +93,12 @@ async function processFile(csvPath,cleanData,res){
             records_inserted: dataInserted.insertedCount,
             db_result: dataInserted.result
         };
-        res.json(uploadObject);
+        res.status(200).json(uploadObject);
     } catch(e){
-        handleError(res,e,`Error guardando los registros en la base de datos`);
+        return next({
+            status:400,
+            message:`Error guardando los registros en la base de datos`
+        })
     } 
 }
 
@@ -112,12 +134,11 @@ async function saveToDb(data){
 async function cleanDB(insurance_company){
     return db.Patient.deleteMany({"insurance_company" : insurance_company});
 }
-
-function handleError(res,err,msg){
+module.exports = router;
+/*function handleError(res,err,msg){
     return res.status(400).json({
         errorMsg: msg,
         errorDetail:err
     });
-}
+} */
 
-module.exports = router;

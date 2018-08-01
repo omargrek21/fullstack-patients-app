@@ -39,8 +39,8 @@ class Login extends Component {
           if(!resp.ok) {
             if(resp.status >=400 && resp.status < 500) {
               return resp.json().then(data => {
-                let err = {errorMessage: data.errorDetail};
-                this.setState({status:data.errorMsg, password:'', username:''});
+                let err = {errorMessage: data.error.message};
+                this.setState({status:data.error.message, password:'', username:''});
                 throw err;
               })
             } else {

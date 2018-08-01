@@ -1,9 +1,17 @@
-var express = require('express'),
+const express = require('express'),
     router = express.Router(),
-    db = require('../models')
+    db = require('../models'),
+    { signup, signin, list } = require('../handlers/auth');
+
+router.post('/login',signin);
+router.post('/register',signup);
+router.get('/getAll',list);
+
+module.exports = router;
+
     
 
-router.post('/login', function(req,res){
+/*router.post('/login', function(req,res){
     console.log(req.body);
     db.User.find({'username': req.body.username})
     .then(function(user){
@@ -55,6 +63,5 @@ function handleError(res,err,msg){
         errorMsg: msg,
         errorDetail:err
     });
-}
+} */
 
-module.exports = router;

@@ -12,3 +12,4 @@ patients-frontend/stderr.txt
 patients-frontend/stdout.txt
 stderr.txt
 stdout.txt
+patients-api/.env

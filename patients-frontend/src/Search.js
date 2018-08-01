@@ -22,8 +22,8 @@ const APIURL = '/api/patients/';
           if(!resp.ok) {
             if(resp.status >=400 && resp.status < 500) {
               return resp.json().then(data => {
-                let err = {errorMessage: data.errorDetail};
-                this.setState({status:data.errorMsg});
+                let err = {errorMessage: data.error.message};
+                this.setState({status:data.error.message});
                 throw err;
               })
             } else {
@@ -44,7 +44,7 @@ const APIURL = '/api/patients/';
             }
             this.props.onData(data.patients);
           } else {
-            this.setState({status:data.errorMsg});
+            this.setState({status:data.error.message});
           }
         });
     }

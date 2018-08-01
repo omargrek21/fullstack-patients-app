@@ -9,7 +9,7 @@ class Data extends Component {
     constructor(props){
       super(props);
       this.state = {
-        patients : [],
+        patients : []
       }
       this.handleData = this.handleData.bind(this);
     }
@@ -40,22 +40,22 @@ class Data extends Component {
             
             <Search className="findForm" onData = {this.handleData} />
             <table className="dataTable">
-            <thead className="tableHead">
-              <tr>
-                <th>beneficiario</th>
-                <th>titular</th>
-                <th>nombre completo</th>
-                <th>f.nac.</th>
-                <th>ubicación</th>
-                <th>tipo</th>
-                <th>contratante</th>
-                <th>ramo</th>
-                <th>aseguradora</th>
-              </tr>
-            </thead>
-              <tbody>
-                {patients}
-              </tbody>
+              <thead className="tableHead">
+                <tr>
+                  <th>beneficiario</th>
+                  <th>titular</th>
+                  <th>nombre completo</th>
+                  <th>f.nac.</th>
+                  <th>ubicación</th>
+                  <th>tipo</th>
+                  <th>contratante</th>
+                  <th>ramo</th>
+                  <th>aseguradora</th>
+                </tr>
+              </thead>
+                <tbody>
+                  {patients}
+                </tbody>
             </table>
           </div>
         );
