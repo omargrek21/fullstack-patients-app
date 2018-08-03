@@ -15,7 +15,7 @@ class App extends Component {
             <title>Data Venemergencia</title>
           </Helmet>
         <Route path="/upload" component= {Login}> </Route>
-        <Data />
+        <Data name = 'Pedro' />
       </div>
     );
   }

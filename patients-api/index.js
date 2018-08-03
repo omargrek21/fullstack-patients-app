@@ -1,5 +1,6 @@
 require("dotenv").config()
-const express = require('express'),
+const debug = require('debug')('http'),
+    express = require('express'),
     app = express(),
     cors = require("cors"),
     port = process.env.PORT || 3000,
@@ -9,20 +10,15 @@ const express = require('express'),
     fs = require('fs'),
     csv = require('fast-csv'),
     bodyParser = require('body-parser'),
-    fileUpload = require('express-fileupload');
-   // cors = require('cors'),
-    //morgan = require('morgan');
-
-//app.use(morgan('tiny'));    
+    fileUpload = require('express-fileupload'),
+    helmet = require('helmet');
+    
+//some middlewares
+app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(fileUpload());
-
-/*app.get('/', function(req, res){
-    console.log("On root route");
-    res.send("On root route");
-}); */
-
+//routes
 app.use('/api/patients', patientRoutes);
 app.use('/api/users', userRoutes);
 app.use(function(req,res,next){    
@@ -33,5 +29,5 @@ app.use(function(req,res,next){
 app.use(errorHandler);
 
 app.listen(port, function(){
-    console.log("APP IS RUNNING ON PORT " + port);
+    debug(`Server running on port: ${port}`);
 })
