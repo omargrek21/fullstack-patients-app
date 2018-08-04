@@ -10,6 +10,14 @@ const clientSchema = new mongoose.Schema({
         default: true,
         required: 'status cannot be blank'
     },
+    branch:{
+        type: String,
+        required: false
+    },
+    code:{
+        type: String,
+        required: 'code cannot be blank'
+    },
     created_date: {
         type: Date,
         default: Date.now()

@@ -1,20 +1,16 @@
 const db = require('../models');
 const jwt = require('jsonwebtoken');
+const debug = require('debug')('/api/users:auth');
 
 exports.signin = async function(req,res,next){
     try {
-        let user = await db.User.findOne({
-            username: req.body.username
-        });
+        let user = await db.User.findOne({username: req.body.username});
         let {id,username} = user;
-        let isMatch = await user.comparePassword(req.body.password);
-        if(isMatch){
-            let token = jwt.sign({
-                id,
-                username,
-            }, process.env.SECRET_KEY);
+        let auth = await user.comparePassword(req.body.password);
+        if(auth){
+            let token = jwt.sign({id,username}, process.env.SECRET_KEY);
             return res.status(200).json({
-                auth: isMatch,
+                auth,
                 id,
                 username,
                 token
@@ -25,14 +21,12 @@ exports.signin = async function(req,res,next){
                 message:"Invalid email/password"
             })
         }   
-        
     } catch (err) {
         return next({
             status:400,
             message:"Invalid email/password"
         })
     }
-    
 }
 
 exports.signup = async function(req, res, next) {

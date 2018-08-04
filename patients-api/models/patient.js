@@ -1,6 +1,10 @@
 var mongoose = require('mongoose');
 
 var patientSchema = new mongoose.Schema({
+    code: {
+        type: String,
+        required: 'code cannot be blank'
+    },
     dni: {
         type: String,
         required: 'dni cannot be blank'
