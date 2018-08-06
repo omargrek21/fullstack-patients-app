@@ -13,6 +13,7 @@ const debug = require('debug')('http'),
     helmet = require('helmet');
     
 //some middlewares
+app.use(cors());
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));

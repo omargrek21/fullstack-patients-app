@@ -1,10 +1,6 @@
 var mongoose = require('mongoose');
 
 var patientSchema = new mongoose.Schema({
-    code: {
-        type: String,
-        required: 'code cannot be blank'
-    },
     dni: {
         type: String,
         required: 'dni cannot be blank'
@@ -37,10 +33,12 @@ var patientSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-    insurance_company: {
-        type: String,
-        required: 'insurance_company cannot be blank'
-    },
+    insurance_company: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Client"
+    }
+  ],
     created_date: {
         type: Date,
         default: Date.now()
