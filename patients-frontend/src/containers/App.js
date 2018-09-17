@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
-import Data from './Data';
-import Login from './Login';
-import Upload from './Upload';
+import Data from '../Data';
+import Login from '../Login';
+import Upload from '../Upload';
 import { Helmet } from 'react-helmet';
-import './App.css';
 import {Link, Route, Redirect} from "react-router-dom";
+import { Provider } from 'react-redux';
+import { configureStore } from '../store';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-class App extends Component {
-  render() {
-    
-    return (
+const store = configureStore();
+
+const App = () => (
+  <Provider store={store}>
+    <Router>
       <div className="App">
         <Helmet>
             <title>Data Venemergencia</title>
@@ -17,8 +20,8 @@ class App extends Component {
         <Route path="/upload" component= {Login}> </Route>
         <Data name = 'Pedro' />
       </div>
-    );
-  }
-}
+    </Router>
+  </Provider>
+);
 
 export default App;

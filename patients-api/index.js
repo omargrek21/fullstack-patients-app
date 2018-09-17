@@ -6,7 +6,7 @@ const debug = require('debug')('http'),
     port = process.env.PORT || 3000,
     patientRoutes = require('./routes/patients'),
     userRoutes = require('./routes/users'),
-    clientRoutes = require('./routes/clients'),
+    //clientRoutes = require('./routes/clients'),
     errorHandler = require("./handlers/error"),
     bodyParser = require('body-parser'),
     fileUpload = require('express-fileupload'),
@@ -21,7 +21,7 @@ app.use(fileUpload());
 //routes
 app.use('/api/patients', patientRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/clients', clientRoutes);
+//app.use('/api/clients', clientRoutes);
 app.use(function(req,res,next){    
     let err = new Error("Not found");
     err.status = 404;

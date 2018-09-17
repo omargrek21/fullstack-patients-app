@@ -13,3 +13,4 @@ patients-frontend/stdout.txt
 stderr.txt
 stdout.txt
 patients-api/.env
+patients-api/npm-debug.log

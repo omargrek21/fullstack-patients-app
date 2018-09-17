@@ -33,12 +33,10 @@ var patientSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-    insurance_company: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Client"
-    }
-  ],
+    insurance_company: {
+      type: String,
+      required: true
+    },
     created_date: {
         type: Date,
         default: Date.now()

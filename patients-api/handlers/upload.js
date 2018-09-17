@@ -1,5 +1,5 @@
-const db = require('../models');
-const debug = require('debug')('/api/patients:upload'),
+const db = require('../models'),
+    debug = require('debug')('/api/patients:upload'),
     fs = require('fs'),
     csv = require('fast-csv'),
     UPLOAD_PATH = process.env.UPLOAD_PATH;
