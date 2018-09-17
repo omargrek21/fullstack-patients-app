@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 
 class AuthForm extends Component {
   constructor(props) {
@@ -7,8 +6,7 @@ class AuthForm extends Component {
     this.state = {
       email: "",
       username: "",
-      password: "",
-      profileImageUrl: ""
+      password: ""      
     };
   }
 
@@ -30,7 +28,7 @@ class AuthForm extends Component {
   };
 
   render() {
-    const { email, username, password, profileImageUrl } = this.state;
+    const { email, username, password } = this.state;
     const {
       signUp,
       heading,
@@ -53,15 +51,15 @@ class AuthForm extends Component {
               {errors.message && (
                 <div className="alert alert-danger">{errors.message}</div>
               )}
-              <label htmlFor="email">E-mail</label>
+              <label htmlFor="username">Username</label>
               <input
                 autoComplete="off"
                 className="form-control"
-                id="email"
-                name="email"
+                id="username"
+                name="username"
                 onChange={this.handleChange}
                 type="text"
-                value={email}
+                value={username}
               />
               <label htmlFor="password">Password</label>
               <input
@@ -110,14 +108,5 @@ class AuthForm extends Component {
     );
   }
 }
-AuthForm.propTypes = {
-  buttonText: PropTypes.string,
-  errors: PropTypes.object,
-  heading: PropTypes.string,
-  history: PropTypes.object,
-  onAuth: PropTypes.func,
-  signIn: PropTypes.bool,
-  removeError: PropTypes.func
-};
 
 export default AuthForm;

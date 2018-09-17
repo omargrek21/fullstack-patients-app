@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-const APIURL = '/api/patients/';
+import { connect } from "react-redux";
+import { findPatients } from "../store/actions/find";
 
   class Search extends Component {
     static defaultProps = {
@@ -14,9 +15,11 @@ const APIURL = '/api/patients/';
       this.handleSubmit = this.handleSubmit.bind(this);
     }
     
-    handleSubmit(e) {
+    handleSubmit = e => {
         e.preventDefault();
-        const dni = this.state.dni;
+        this.props.findPatients(this.state.dni);
+
+        /*const dni = this.state.dni;
         fetch(APIURL+dni)
         .then(resp => {
           if(!resp.ok) {
@@ -46,7 +49,7 @@ const APIURL = '/api/patients/';
           } else {
             this.setState({status:data.error.message});
           }
-        });
+        });*/
     }
 
     render() {
@@ -57,16 +60,23 @@ const APIURL = '/api/patients/';
             <input
               type="text"
               name="dni"
-              placeholder="CI beneficiario"
+              placeholder="Introduzca CI"
               value={dni}
               onChange={(e) => this.setState({[e.target.name]: e.target.value })}
             />
             <button type="submit">Buscar</button>
           </form>
-          <p>{status}</p>
+          {this.props.errors.message && (
+            <div className="alert alert-danger">{this.props.errors.message}</div>
+          )}          
         </div>
       );
     }
   }
-    
-export default Search;
+
+  function mapStateToProps(state) {
+    return {
+      errors: state.errors
+    };
+  }
+  export default connect(mapStateToProps, { findPatients })(Search);   

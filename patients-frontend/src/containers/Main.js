@@ -6,7 +6,6 @@ import AuthForm from "../components/AuthForm";
 import { authUser } from "../store/actions/auth";
 import { removeError } from "../store/actions/errors";
 import withAuth from "../hocs/withAuth";
-import SearchForm from "../containers/SearchForm";
 
 const Main = props => {
   const { authUser, errors, removeError, currentUser } = props;
@@ -27,8 +26,8 @@ const Main = props => {
                 removeError={removeError}
                 errors={errors}
                 onAuth={authUser}
-                buttonText="Log in"
-                heading="Welcome Back."
+                buttonText="Iniciar sesión"
+                heading="Bienvenido de vuelta"
                 {...props}
               />
             );
@@ -36,7 +35,7 @@ const Main = props => {
         />
         <Route
           path="/data"
-          component={withAuth(SearchForm)}
+          component={withAuth(Data)}
         />
       </Switch>
     </div>

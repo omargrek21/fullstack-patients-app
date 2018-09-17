@@ -4,28 +4,8 @@ import PatientItem from './PatientItem';
 import Upload from './Upload';
 import Search from './Search';
 import './Data.css';
-//const APIURL = '/api/patients';
 
-class Data extends Component {
-    constructor(props){
-      super(props);
-      this.state = {
-        patients : []
-      }
-      this.handleData = this.handleData.bind(this);
-    }
-    
-    /*componentWillMount() {
-      fetch(APIURL)
-      .then(response => response.json())
-      .then(patients => this.setState({patients}));
-    }*/
-    
-    handleData(data){
-      console.log("recibido:", data);
-      const patients = [...data];
-      this.setState({patients});
-    }
+class Data extends Component {    
     
     render() {
       const patients = this.props.patients.map((patient,index) => (
@@ -34,40 +14,38 @@ class Data extends Component {
           key = {patient._id}
           {...patient}
         />
-      ));
-      
-        return(
-          <div className="data">
-            
-            <Search className="findForm" onData = {this.handleData} /> 
-            <table className="dataTable">
-              <thead className="tableHead">
-                <tr>
-                  <th>beneficiario</th>
-                  <th>titular</th>
-                  <th>nombre completo</th>
-                  <th>f.nac.</th>
-                  <th>ubicación</th>
-                  <th>tipo</th>
-                  <th>contratante</th>
-                  <th>ramo</th>
-                  <th>aseguradora</th>
-                </tr>
-              </thead>
-                <tbody>
-                  {patients}
-                </tbody>
-            </table>
-          </div>
-        );
+      ));      
+      return(
+        <div className="data">              
+          <table className="dataTable">
+            <thead className="tableHead">
+              <tr>
+                <th>Beneficiario</th>
+                <th>Titular</th>
+                <th>Nombre Completo</th>
+                <th>Fecha Nac.</th>
+                <th>Ubicación</th>
+                <th>Tipo</th>
+                <th>Contratante</th>
+                <th>Ramo</th>
+                <th>Seguro</th>
+              </tr>
+            </thead>
+              <tbody>
+                {patients}
+              </tbody>
+          </table>
+        </div>
+      );
     }
 }
 
 function mapStateToProps(state) {
   return {
-    patients: state.patients,
-    currentUser: state.currentUser.user.id
+    patients: state.patients
   };
 }
 
-export default Data;
+export default connect(mapStateToProps, null)(
+  Data
+);

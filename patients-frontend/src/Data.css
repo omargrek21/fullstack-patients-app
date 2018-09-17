@@ -22,10 +22,10 @@
     color:white;
     font-size: 18px;
 }
-.par{
+.even{
    background-color:#E6E6E6; 
 }
-.impar{
+.odd{
    background-color:#fff; 
 }
 td{

@@ -18,10 +18,7 @@ const Homepage = (props) => {
   }
   return (
     <div>
-      <Data
-        profileImageUrl={currentUser.user.profileImageUrl}
-        username={currentUser.user.username}
-      />
+      <Data/>
     </div>
   );
 };
