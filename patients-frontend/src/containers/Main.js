@@ -1,11 +1,12 @@
 import React from "react";
 import { Switch, Route, withRouter, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import HomePage from "../components/HomePage";
+import  HomePage from "../components/HomePage";
 import AuthForm from "../components/AuthForm";
 import { authUser } from "../store/actions/auth";
 import { removeError } from "../store/actions/errors";
 import withAuth from "../hocs/withAuth";
+import Data from "./Data";
 
 const Main = props => {
   const { authUser, errors, removeError, currentUser } = props;
@@ -15,7 +16,7 @@ const Main = props => {
         <Route
           exact
           path="/"
-          render={props => <Homepage currentUser={currentUser} {...props} />}
+          render={props => <HomePage currentUser={currentUser} {...props} />}
         />
         <Route
           exact

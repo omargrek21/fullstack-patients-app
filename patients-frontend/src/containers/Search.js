@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { findPatients } from "../store/actions/find";
+import { findPatients } from "../store/actions/patients";
 
   class Search extends Component {
     static defaultProps = {

@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import PatientItem from './PatientItem';
-import Upload from './Upload';
+import PatientItem from '../components/PatientItem';
 import Search from './Search';
-import './Data.css';
+import '../Data.css';
 
 class Data extends Component {    
     

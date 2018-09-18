@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import Data from '../Data';
+import Data from './Data';
 import Login from '../Login';
 import Upload from '../Upload';
 import { Provider } from 'react-redux';
 import { configureStore } from '../store';
-//import {Link, Route, Redirect} from "react-router-dom";
+import {Link, Route, Redirect} from "react-router-dom";
 import { BrowserRouter as Router } from 'react-router-dom';
 import Navbar from "./Navbar";
 import Main from "./Main";
@@ -17,8 +17,6 @@ const App = () => (
       <div className="app">
         <Navbar />
         <Main />
-        <Route path="/upload" component= {Login}> </Route>
-        <Data name = 'Pedro' />
       </div>
     </Router>
   </Provider>

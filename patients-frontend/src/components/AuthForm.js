@@ -83,16 +83,7 @@ class AuthForm extends Component {
                     type="text"
                     value={username}
                   />
-                  <label htmlFor="image-url">Image URL</label>
-                  <input
-                    autoComplete="off"
-                    className="form-control"
-                    id="image-url"
-                    name="profileImageUrl"
-                    onChange={this.handleChange}
-                    type="text"
-                    value={profileImageUrl}
-                  />
+                  
                 </div>
               )}
               <button

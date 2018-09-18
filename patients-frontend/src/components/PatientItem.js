@@ -1,5 +1,5 @@
 import React from 'react';
-import './Data.css';
+import '../Data.css';
 
 const PatientItem = ({color,dni,titular_dni, full_name,birth_date,location,type,owner,branch,insurance_company}) => (
     <tr className={color}>
