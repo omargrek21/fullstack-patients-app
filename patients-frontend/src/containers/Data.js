@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import PatientItem from './PatientItem';
 import Upload from './Upload';
 import Search from './Search';
@@ -27,18 +28,18 @@ class Data extends Component {
     }
     
     render() {
-        const patients = this.state.patients.map((patient,index) => (
-              <PatientItem
-                color = {index % 2 ===0 ? 'par' : 'impar'}
-                key = {patient._id}
-                {...patient}
-              />
-          ));
+      const patients = this.props.patients.map((patient,index) => (
+        <PatientItem
+          color = {index % 2 ===0 ? 'even' : 'odd'}
+          key = {patient._id}
+          {...patient}
+        />
+      ));
       
         return(
           <div className="data">
             
-            <Search className="findForm" onData = {this.handleData} />
+            <Search className="findForm" onData = {this.handleData} /> 
             <table className="dataTable">
               <thead className="tableHead">
                 <tr>
@@ -60,6 +61,13 @@ class Data extends Component {
           </div>
         );
     }
+}
+
+function mapStateToProps(state) {
+  return {
+    patients: state.patients,
+    currentUser: state.currentUser.user.id
+  };
 }
 
 export default Data;

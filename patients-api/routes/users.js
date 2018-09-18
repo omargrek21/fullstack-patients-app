@@ -3,8 +3,8 @@ const express = require('express'),
     db = require('../models'),
     { signup, signin, list } = require('../handlers/auth');
 
-router.post('/login',signin);
-router.post('/register',signup);
+router.post('/signin',signin);
+router.post('/signup',signup);
 router.get('/getAll',list);
 
 module.exports = router;

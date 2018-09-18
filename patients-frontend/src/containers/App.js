@@ -2,21 +2,21 @@ import React, { Component } from 'react';
 import Data from '../Data';
 import Login from '../Login';
 import Upload from '../Upload';
-import { Helmet } from 'react-helmet';
-import {Link, Route, Redirect} from "react-router-dom";
 import { Provider } from 'react-redux';
 import { configureStore } from '../store';
+//import {Link, Route, Redirect} from "react-router-dom";
 import { BrowserRouter as Router } from 'react-router-dom';
+import Navbar from "./Navbar";
+import Main from "./Main";
 
 const store = configureStore();
 
 const App = () => (
-  <Provider store={store}>
+  <Provider store={store}>  
     <Router>
-      <div className="App">
-        <Helmet>
-            <title>Data Venemergencia</title>
-          </Helmet>
+      <div className="app">
+        <Navbar />
+        <Main />
         <Route path="/upload" component= {Login}> </Route>
         <Data name = 'Pedro' />
       </div>
