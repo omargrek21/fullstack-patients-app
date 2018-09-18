@@ -3,18 +3,12 @@ import { connect } from "react-redux";
 import { findPatients } from "../store/actions/patients";
 
   class Search extends Component {
-    static defaultProps = {
-      onData() {}
-    }
     constructor() {
       super();
       this.state = {
-        dni: '',
-        status: ''
+        dni: ''
       };
-      this.handleSubmit = this.handleSubmit.bind(this);
     }
-    
     handleSubmit = e => {
         e.preventDefault();
         this.props.findPatients(this.state.dni);
@@ -51,9 +45,8 @@ import { findPatients } from "../store/actions/patients";
           }
         });*/
     }
-
     render() {
-      const {dni, status} = this.state;
+      const {dni} = this.state;
       return (
         <div>
           <form onSubmit={this.handleSubmit}>

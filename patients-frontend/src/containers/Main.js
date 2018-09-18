@@ -16,7 +16,7 @@ const Main = props => {
         <Route
           exact
           path="/"
-          render={props => <HomePage currentUser={currentUser} {...props} />}
+          component={ withAuth(Data) }
         />
         <Route
           exact
@@ -34,10 +34,13 @@ const Main = props => {
             );
           }}
         />
+        
         <Route
+          exact
           path="/data"
-          component={withAuth(Data)}
+          component={ withAuth(Data) }
         />
+        
       </Switch>
     </div>
   );

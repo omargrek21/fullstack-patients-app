@@ -4,7 +4,6 @@ import Login from '../Login';
 import Upload from '../Upload';
 import { Provider } from 'react-redux';
 import { configureStore } from '../store';
-import {Link, Route, Redirect} from "react-router-dom";
 import { BrowserRouter as Router } from 'react-router-dom';
 import Navbar from "./Navbar";
 import Main from "./Main";

@@ -1,7 +1,10 @@
 import React from "react";
 import { Link, Route, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
 import Data from "../containers/Data";
 import AuthForm from "./AuthForm";
+import { authUser } from "../store/actions/auth";
+import { removeError } from "../store/actions/errors";
 
 const Homepage = (props) => {
  const { authUser, errors, removeError, currentUser } = props;
@@ -23,4 +26,12 @@ const Homepage = (props) => {
   );
 };
 
-export default Homepage;
+function mapStateToProps(state) {
+  return {
+    errors: state.errors
+  };
+}
+
+export default connect(mapStateToProps, { authUser, removeError })(Homepage);
+
+

@@ -33,14 +33,8 @@ class AuthForm extends Component {
       signUp,
       heading,
       buttonText,
-      errors,
-      history,
-      removeError
+      errors
     } = this.props;
-
-    history.listen(() => {
-      removeError();
-    });
 
     return (
       <div>

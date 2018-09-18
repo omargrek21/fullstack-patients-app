@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import PatientItem from '../components/PatientItem';
-import Search from './Search';
 import '../Data.css';
+import { Link } from "react-router-dom";
 
-class Data extends Component {    
-    
+class Data extends Component {  
+  constructor(props) {
+    super(props);
+  }
+   
     render() {
       const patients = this.props.patients.map((patient,index) => (
         <PatientItem
@@ -13,9 +16,11 @@ class Data extends Component {
           key = {patient._id}
           {...patient}
         />
-      ));      
+      ));  
+     
       return(
-        <div className="data">              
+        <div className="data">  
+          <Link to='/data'> Go to Data </Link>
           <table className="dataTable">
             <thead className="tableHead">
               <tr>

@@ -9,6 +9,7 @@ export function setCurrentUser(user) {
   };
 }
 
+
 export function setAuthorizationToken(token) {
   setTokenHeader(token);
 }
