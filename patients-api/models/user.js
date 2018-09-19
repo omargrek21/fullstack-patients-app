@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: 'password cannot be blank'
     },
+    role: {
+        type: String,
+        required: 'Role cannot be blank'
+    },
     created_date: {
         type: Date,
         default: Date.now()

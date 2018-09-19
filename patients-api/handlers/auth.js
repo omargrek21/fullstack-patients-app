@@ -5,14 +5,16 @@ const debug = require('debug')('/api/users:auth');
 exports.signin = async function(req,res,next){
     try {
         let user = await db.User.findOne({username: req.body.username});
-        let {id,username} = user;
+        let {id,username,role,email} = user;
         let auth = await user.comparePassword(req.body.password);
         if(auth){
-            let token = jwt.sign({id,username}, process.env.SECRET_KEY);
+            let token = jwt.sign({id,username,role,email}, process.env.SECRET_KEY);
             return res.status(200).json({
                 auth,
                 id,
                 username,
+                role,
+                email,
                 token
             });
         } else {
@@ -32,18 +34,23 @@ exports.signin = async function(req,res,next){
 exports.signup = async function(req, res, next) {
     try{
         let user = await db.User.create(req.body);
-        let { id, username, email} = user;
+        let { id, username, email, role} = user;
         let token = jwt.sign(
         {
             id,
             username,
+            role,
+            email,
             email
         },
         process.env.SECRET_KEY
         );
         return res.status(200).json({
         sucess:true,
+        id,
         username,
+        email,
+        role,
         token
         });   
         
