@@ -3,50 +3,25 @@ import { connect } from "react-redux";
 import { findPatients } from "../store/actions/patients";
 
   class Search extends Component {
+    static defaultProps = {
+      onData() {}
+    }
     constructor() {
       super();
       this.state = {
-        dni: ''
+        dni: '',
+        status: ''
       };
+      this.handleSubmit = this.handleSubmit.bind(this);
     }
+    
     handleSubmit = e => {
         e.preventDefault();
-        this.props.findPatients(this.state.dni);
-
-        /*const dni = this.state.dni;
-        fetch(APIURL+dni)
-        .then(resp => {
-          if(!resp.ok) {
-            if(resp.status >=400 && resp.status < 500) {
-              return resp.json().then(data => {
-                let err = {errorMessage: data.error.message};
-                this.setState({status:data.error.message});
-                throw err;
-              })
-            } else {
-              let err = {errorMessage: 'Server down, check status'};
-              this.setState({status:'Por favor intente de nuevo más tarde, el servidor no está respondiendo'});
-              throw err;
-            }
-          }
-          return resp.json()
-        })
-        .then(data => {
-          console.log(data);
-          if(data.success){
-            if(data.patients.length === 0){
-              this.setState({status:'Cédula no registrada'});
-            } else {
-              this.setState({status:''});
-            }
-            this.props.onData(data.patients);
-          } else {
-            this.setState({status:data.error.message});
-          }
-        });*/
+        this.props.findPatients(this.state.dni);        
     }
+
     render() {
-      const {dni} = this.state;
+      const {dni, status} = this.state;
       return (
         <div>
           <form onSubmit={this.handleSubmit}>
