@@ -10,7 +10,8 @@ const debug = require('debug')('http'),
     errorHandler = require("./handlers/error"),
     bodyParser = require('body-parser'),
     fileUpload = require('express-fileupload'),
-    helmet = require('helmet');
+    helmet = require('helmet'),
+    { loginRequired, ensureCorrectUser } = require("./middleware/auth");
     
 //some middlewares
 app.use(cors());
@@ -19,7 +20,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(fileUpload());
 //routes
-app.use('/api/patients', patientRoutes);
+app.use('/api/patients', loginRequired, patientRoutes);
 app.use('/api/users', userRoutes);
 //app.use('/api/clients', clientRoutes);
 app.use(function(req,res,next){    

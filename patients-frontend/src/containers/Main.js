@@ -7,6 +7,7 @@ import { authUser } from "../store/actions/auth";
 import { removeError } from "../store/actions/errors";
 import withAuth from "../hocs/withAuth";
 import Data from "./Data";
+import Upload from "./Upload"
 
 const Main = props => {
   const { authUser, errors, removeError, currentUser } = props;
@@ -34,11 +35,10 @@ const Main = props => {
             );
           }}
         />
-        
         <Route
           exact
-          path="/data"
-          component={ withAuth(Data) }
+          path="/upload"
+          component={ withAuth(Upload) }
         />
         
       </Switch>

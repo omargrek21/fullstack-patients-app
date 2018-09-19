@@ -16,12 +16,12 @@ import { findPatients } from "../store/actions/patients";
     }
     
     handleSubmit = e => {
-        e.preventDefault();
-        this.props.findPatients(this.state.dni);        
+      e.preventDefault();
+      this.props.findPatients(this.state.dni);        
     }
 
     render() {
-      const {dni, status} = this.state;
+      const { dni } = this.state;
       return (
         <div>
           <form onSubmit={this.handleSubmit}>

@@ -29,19 +29,9 @@ exports.find = async function(req,res,next){
     debug(`${req.method} ${req.url}`);
     try{
         let patients = await db.Patient.find({'dni': req.params.patientDni});
-        let auxArr = [...patients];
-        console.log('patients arr: ', auxArr);
-        patients.forEach((patient, index) => {
-            const newName = insuranceList.find(insurance => 6 in insurance)[6];
-            auxArr[index].insurance_company = newName;
-        });
-        console.log('***/***********aux arr**********************');
-        console.log(auxArr[0]);
-       // console.log(patients);
-       // debug(`data is: ${data[0].insurance_company}`);
         res.status(200).json({
            success: true,
-           patients: auxArr
+           patients
         });
     } catch (e){
         return next({

@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import Data from './Data';
-import Login from '../Login';
-import Upload from '../Upload';
 import { Provider } from 'react-redux';
 import { configureStore } from '../store';
 import { BrowserRouter as Router } from 'react-router-dom';

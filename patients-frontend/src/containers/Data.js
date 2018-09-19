@@ -8,7 +8,6 @@ class Data extends Component {
   constructor(props) {
     super(props);
   }
-   
     render() {
       const patients = this.props.patients.map((patient,index) => (
         <PatientItem
@@ -20,7 +19,7 @@ class Data extends Component {
      
       return(
         <div className="data">  
-          <Link to='/data'> Go to Data </Link>
+          {this.props.currentUser.user.email === 'operez@grupov.com.ve' && (<Link to='/upload'> Upload new Data </Link>)}
           <table className="dataTable">
             <thead className="tableHead">
               <tr>
@@ -46,7 +45,8 @@ class Data extends Component {
 
 function mapStateToProps(state) {
   return {
-    patients: state.patients
+    patients: state.patients,
+    currentUser: state.currentUser
   };
 }
 

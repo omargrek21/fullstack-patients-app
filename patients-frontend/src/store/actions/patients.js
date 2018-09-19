@@ -11,9 +11,6 @@ export const resetPatients = () => ({
   type: RESET_PATIENTS  
 });
 
-export const reset = dispatch => (
-   dispatch(resetPatients)      
-);
 
 export const findPatients = dni => dispatch => {  
   return apiCall("get", `/api/patients/${dni}`)
@@ -23,5 +20,7 @@ export const findPatients = dni => dispatch => {
     })
     .catch(err => {
         dispatch(addError(err.message));
+        dispatch(resetPatients());
     });
 };
+

@@ -73,7 +73,7 @@ function parseData(path){
         var stream = fs.createReadStream(path);
         try{
             csv
-            .fromStream(stream, {headers: ["dni", "titular_dni", "full_name", "birth_date", "location", "type", "owner", "branch", "insurance_company"]})
+            .fromStream(stream, {headers: ["dni", "titular_dni", "full_name", "birth_date", "location", "type", "owner", "branch", "insurance_company", "insurance_code"]})
              .on("data", function(data){
                  rowFlag++;
                  patientsArr.push(data);

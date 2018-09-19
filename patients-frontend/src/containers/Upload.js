@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-const APIURL = '/api/patients';
+import { connect } from "react-redux";
+import { uploadPatients } from "../store/actions/messages";
+
 
   class Upload extends Component {
     constructor() {
       super();
       this.state = {
         selectedFile: '',
-        status: '', 
         cleanData: false
       };
     }
@@ -26,47 +27,16 @@ const APIURL = '/api/patients';
     }
 
     onSubmit = (e) => {
-      
       e.preventDefault();
-      this.setState({status:'Cargando...'});
       const {selectedFile, cleanData } = this.state;
       let formData = new FormData();
       formData.append('selectedFile', selectedFile);
       formData.append('cleanData', cleanData);
-      
-      fetch(APIURL, {
-        method: "POST",
-        body: formData
-      })
-      .then(resp => {
-        if(!resp.ok) {
-          if(resp.status >=400 && resp.status < 500) {
-            return resp.json().then(data => {
-              let err = {errorDetail: data.error.message};
-              this.setState({status: data.error.message});
-              throw err;
-            })
-          } else {
-            let err = {errorMessage: 'Server down, check status'};
-            this.setState({status:'Por favor intente de nuevo más tarde, servidor no disponible'});
-            throw err;
-          }
-        }
-        return resp.json()
-      })
-      .then(data => {
-        console.log(data);
-        if(data.success) {
-          this.setState({status:'Archivo cargado exitosamente',selectedFile: '',cleanData: false});
-          document.getElementById('selectedFile').value = null;
-        } else {
-          this.setState({status: data.error.message});
-        }
-      })
+      this.props.uploadPatients(formData);
     }
 
     render() {
-      const {status, cleanData} = this.state;
+      const { cleanData } = this.state;
       return (
         <div>
           <form onSubmit={this.onSubmit}>
@@ -91,10 +61,22 @@ const APIURL = '/api/patients';
             <br/>
             <button type="submit">Cargar archivo</button>
           </form>
-          <p>{status}</p>
+          {this.props.messages.message && (
+            <div className="alert alert-danger"> {this.props.messages.message.records_inserted} records inserted successfully</div>
+          )}
+          {this.props.errors.message && (
+            <div className="alert alert-danger">{this.props.errors.message}</div>
+          )} 
         </div>
       );
     }
   }
+  
+function mapStateToProps(state) {
+  return {
+    errors: state.errors,
+    messages: state.messages
+  };
+}
+export default connect(mapStateToProps, { uploadPatients })(Upload);   
     
-export default Upload;

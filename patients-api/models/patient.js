@@ -37,9 +37,13 @@ var patientSchema = new mongoose.Schema({
       type: String,
       required: true
     },
+    insurance_code: {
+      type: String,
+      required: true
+    },
     created_date: {
-        type: Date,
-        default: Date.now()
+      type: Date,
+      default: Date.now()
     }
 });
 

@@ -3,3 +3,4 @@ export const REMOVE_ERROR = 'REMOVE_ERROR';
 export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 export const LOAD_PATIENTS = 'LOAD_PATIENTS';
 export const RESET_PATIENTS = 'RESET_PATIENTS';
+export const ADD_PATIENTS = 'ADD_PATIENTS';
