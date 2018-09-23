@@ -3,7 +3,8 @@ import { LOAD_PATIENTS, RESET_PATIENTS } from "../actionTypes";
 const patients = (state = [], action) => {
   switch (action.type) {
     case LOAD_PATIENTS:
-      return [...action.patients.patients];
+      console.log(action);
+      return [...action.patients];
     case RESET_PATIENTS:
       return [];
     default:

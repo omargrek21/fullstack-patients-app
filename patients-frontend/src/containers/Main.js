@@ -1,7 +1,6 @@
 import React from "react";
-import { Switch, Route, withRouter, Redirect } from "react-router-dom";
+import { Switch, Route, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import  HomePage from "../components/HomePage";
 import AuthForm from "../components/AuthForm";
 import { authUser } from "../store/actions/auth";
 import { removeError } from "../store/actions/errors";
@@ -10,7 +9,7 @@ import Data from "./Data";
 import Upload from "./Upload"
 
 const Main = props => {
-  const { authUser, errors, removeError, currentUser } = props;
+  const { authUser, errors, removeError } = props;
   return (
     <div className="container">
       <Switch>

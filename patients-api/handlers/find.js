@@ -28,10 +28,16 @@ const insuranceList = [
 exports.find = async function(req,res,next){
     debug(`${req.method} ${req.url}`);
     try{
-        let patients = await db.Patient.find({'dni': req.params.patientDni});
+        const patientsData = await Promise.all([
+            db.Patient.find({'dni': req.params.patientDni}),
+            db.Patient.find({'titular_dni': req.params.patientDni})
+        ]);
+        const patients = patientsData[0];
+        const beneficiaries = patientsData[1].filter(patient =>patient.titular_dni != patient.dni);
         res.status(200).json({
            success: true,
-           patients
+           patients,
+           beneficiaries
         });
     } catch (e){
         return next({

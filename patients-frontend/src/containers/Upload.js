@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { uploadPatients } from "../store/actions/messages";
+import { uploadPatients } from "../store/actions/patients";
 
 
   class Upload extends Component {
