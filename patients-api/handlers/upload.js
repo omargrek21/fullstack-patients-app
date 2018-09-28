@@ -24,8 +24,12 @@ exports.upload = async function(req,res,next){
 
 async function processFile(csvPath,cleanData,res,next){
     let patientsData = [];
+    let insurance_data = {};
+    
     try {
-        patientsData = await parseData(csvPath);
+        let data_parsed = await parseData(csvPath, cleanData);
+        patientsData = data_parsed.patients;
+        insurance_data = data_parsed.insurance_data;
         debug(`Lectura del archivo ${csvPath} completada con ${patientsData.length} registros`);
     } catch(e){
         return next({
@@ -35,21 +39,28 @@ async function processFile(csvPath,cleanData,res,next){
     }
     
     if(cleanData === 'true'){
-        const insurance_company = patientsData[0].insurance_company;
         try {
-            await cleanDB(insurance_company);
-            debug(`Data previa de ${insurance_company} eliminada exitosamente`);
+            await cleanDB(Object.keys(insurance_data));
+            debug(`Data previa eliminada exitosamente`);
         } catch(e){
             return next({
                 status:400,
-                message:`Error eliminando data previa de ${insurance_company}`
-            })
+                message:`Error eliminando data previa`
+            });
         }
     }
     
     try {
-        let dataInserted = await saveToDb(patientsData);
-        debug(`${dataInserted.insertedCount} registros guardados en base de datos exitosamente`);
+        let queries = [saveToDb(patientsData)];
+        let update_arr = [];
+        for(let insurance in insurance_data){
+            queries.push(updateInsuranceCount(cleanData,insurance,insurance_data[insurance]));
+            queries.push(updateDate(insurance,insurance_data[insurance]));
+        }
+        
+        let results = await Promise.all([...update_arr]);
+        let dataInserted = results[0];
+        //debug(`${dataInserted.insertedCount} registros guardados en base de datos exitosamente`);
         const uploadObject = {
             success:true, 
             path: csvPath,
@@ -66,9 +77,10 @@ async function processFile(csvPath,cleanData,res,next){
     } 
 }
 
-function parseData(path){
+async function parseData(path, cleanData){
     return new Promise(function(resolve,reject){
         let patientsArr = [];
+        let insurance_data = {};
         let rowFlag = 0;
         var stream = fs.createReadStream(path);
         try{
@@ -77,13 +89,19 @@ function parseData(path){
              .on("data", function(data){
                  rowFlag++;
                  patientsArr.push(data);
+                 if(data.insurance_code in insurance_data){
+                    insurance_data[data.insurance_code]++;
+                 } else{
+                    insurance_data[data.insurance_code] = 1;
+                 }
              })
              .on("end", function(){
-                resolve(patientsArr); 
+               const dataParsed = {patients:patientsArr,insurance_data};
+               resolve(dataParsed); 
              })
              .on("error", function(e){
                 reject(rowFlag);
-             })
+             });
             
         } catch(e) {
             reject(rowFlag);
@@ -95,6 +113,18 @@ async function saveToDb(data){
     return db.Patient.collection.insert(data);
 }
 
-async function cleanDB(insurance_company){
-    return db.Patient.deleteMany({"insurance_company" : insurance_company});
+async function updateInsuranceCount(cleanData,insurance_code, qty){
+    if(cleanData==='true'){
+        return db.Client.update({insurance_code},{ $set: {'qty': 55}});
+    } else{
+        return db.Client.update({insurance_code},{ $inc: {qty}});
+    }
+}
+
+async function updateDate(insurance_code,qty){
+   return db.Client.update({insurance_code},{ $set: {'modified_date':Date.now()}}); 
+}
+
+async function cleanDB(insurance_codes){
+    return db.Patient.deleteMany({"insurance_code" : { $in: insurance_codes }});
 }

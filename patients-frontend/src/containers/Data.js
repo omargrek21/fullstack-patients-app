@@ -24,7 +24,7 @@ class Data extends Component {
      
       return(
         <div className="data">  
-          {this.props.currentUser.user.email === 'operez@grupov.com.ves' && (<Link to='/upload'> Upload new Data </Link>)}
+          {this.props.currentUser.user.email === 'operez@grupov.com.ve' && (<Link to='/upload'> Upload new Data </Link>)}
           <h3> Póliza(s) del usuario: {this.props.messages.patients} </h3>
           <table className="dataTable">
             <thead className="tableHead">
