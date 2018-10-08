@@ -7,15 +7,15 @@ var patientSchema = new mongoose.Schema({
     },
     titular_dni: {
         type: String,
-        required: 'titular dni cannot be blank'
+        required: false
     },
     full_name: {
         type: String,
-        required: 'fullname cannot be blank'
+        required: true
     },
     birth_date: {
         type: String,
-        required: false
+        required: true
     },
     location: {
         type: String,
@@ -35,15 +35,51 @@ var patientSchema = new mongoose.Schema({
     },
     insurance_company: {
       type: String,
-      required: true
+      required: false
     },
     insurance_code: {
       type: String,
-      required: true
+      required: false
     },
     created_date: {
       type: Date,
       default: Date.now()
+    },
+    device_phone: {
+      type: String,
+      required: false
+    },
+    address: {
+      type: String,
+      required: false
+    },
+    patient_phone: {
+      type: String,
+      required: false
+    },
+    contact_phone_1: {
+      type: String,
+      required: false
+    },
+    contact_name_1: {
+      type: String,
+      required: false
+    },
+    relationship_1: {
+      type: String,
+      required: false
+    },
+    contact_phone_2: {
+      type: String,
+      required: false
+    },
+    contact_name_2: {
+      type: String,
+      required: false
+    },
+    relationship_2: {
+      type: String,
+      required: false
     }
 });
 

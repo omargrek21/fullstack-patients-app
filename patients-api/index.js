@@ -7,6 +7,7 @@ const debug = require('debug')('http'),
     patientRoutes = require('./routes/patients'),
     userRoutes = require('./routes/users'),
     clientRoutes = require('./routes/clients'),
+    trackerRoutes = require('./routes/tracker-patients'),
     errorHandler = require("./handlers/error"),
     bodyParser = require('body-parser'),
     fileUpload = require('express-fileupload'),
@@ -23,6 +24,7 @@ app.use(fileUpload());
 app.use('/api/patients', loginRequired, patientRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/clients', clientRoutes);
+app.use('/api/tracker/patients',loginRequired, trackerRoutes);
 app.use(function(req,res,next){    
     let err = new Error("Not found");
     err.status = 404;
