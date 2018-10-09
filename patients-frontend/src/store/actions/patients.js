@@ -1,5 +1,5 @@
 import { apiCall } from "../../services/api";
-import { LOAD_PATIENTS, RESET_PATIENTS, LOAD_BENEFICIARIES, RESET_BENEFICIARIES } from "../actionTypes";
+import { LOAD_PATIENTS, RESET_PATIENTS, LOAD_BENEFICIARIES, RESET_BENEFICIARIES, SET_TYPE } from "../actionTypes";
 import { addError, removeError } from "./errors";
 import { queryResult, addPatients } from "./messages";
 
@@ -22,25 +22,28 @@ export const resetBeneficiaries = () => ({
   type: RESET_BENEFICIARIES  
 });
 
+export const setType = mode => ({
+  type: SET_TYPE,
+  mode
+});
 
 export const findPatients = dni => dispatch => {  
   return apiCall("get", `/api/patients/${dni}`)
     .then(res => {
-        if(res.patients.length > 0){
-          dispatch(loadPatients(res.patients));
-          dispatch(queryResult('patients',null));
-        }else {
-          dispatch(queryResult('patients','Usuario no registrado'));
-          dispatch(resetPatients());
-        }
-        if(res.beneficiaries.length > 0) {
-          dispatch(loadBeneficiaries(res.beneficiaries));
-          dispatch(queryResult('beneficiaries',null));
-        }else {
-          dispatch(queryResult('beneficiaries','N/A'));
+      const type = res.type;
+      dispatch(setType(type));
+      processData(res,dispatch);
+      switch (type) {
+        case "gps":
           dispatch(resetBeneficiaries());
-        }
-        dispatch(removeError());
+          break;
+        case "health":
+          processTraditional(res,dispatch);
+          break;
+        default:
+          processTraditional(res,dispatch);
+      }
+      dispatch(removeError());
     })
     .catch(err => {
         dispatch(addError(err.message));
@@ -58,5 +61,25 @@ export const uploadPatients = data => dispatch => {
     .catch(err => {
         dispatch(addError(err.message));
     });
+};
+
+const processData = (res,dispatch) => {
+  if(res.patients.length > 0){
+    dispatch(loadPatients(res.patients));
+    dispatch(queryResult('patients',null));
+  }else {
+    dispatch(queryResult('patients','Usuario no registrado'));
+    dispatch(resetPatients());
+  }
+};
+
+const processTraditional = (res,dispatch) => {
+  if(res.beneficiaries.length > 0) {
+    dispatch(loadBeneficiaries(res.beneficiaries));
+    dispatch(queryResult('beneficiaries',null));
+  }else {
+    dispatch(queryResult('beneficiaries','N/A'));
+    dispatch(resetBeneficiaries());
+  }
 };
 

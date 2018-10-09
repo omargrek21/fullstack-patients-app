@@ -27,18 +27,33 @@ const insuranceList = [
 
 exports.find = async function(req,res,next){
     debug(`${req.method} ${req.url}`);
+    const dni = req.params.patientDni;
     try{
-        const patientsData = await Promise.all([
-            db.Patient.find({'dni': req.params.patientDni}),
-            db.Patient.find({'titular_dni': req.params.patientDni})
-        ]);
-        const patients = patientsData[0];
-        const beneficiaries = patientsData[1].filter(patient =>patient.titular_dni != patient.dni);
-        res.status(200).json({
-           success: true,
-           patients,
-           beneficiaries
-        });
+        if(dni.length > 8){//is phone number
+            const patients = await db.Patient.find({'device_phone':dni});
+            res.status(200).json({
+               success: true,
+               patients,
+               beneficiaries: [],
+               type:'gps'
+            });
+            
+        } else {//is dni
+            const patientsData = await Promise.all([
+                db.Patient.find({dni}),
+                db.Patient.find({'titular_dni': dni})
+            ]);
+            const patients = patientsData[0];
+            const beneficiaries = patientsData[1].filter(patient =>patient.titular_dni != patient.dni);
+            res.status(200).json({
+               success: true,
+               patients,
+               beneficiaries,
+               type:'health'
+            });
+        }
+        
+        
     } catch (e){
         return next({
             status:400,
@@ -50,7 +65,7 @@ exports.find = async function(req,res,next){
 exports.empty = async function(req,res,next){
     return next({
         status:400,
-        message:"Debes introducir una cédula"
+        message:"Debes introducir una cédula o número de teléfono"
     })
 }
 
