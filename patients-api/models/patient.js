@@ -47,7 +47,8 @@ var patientSchema = new mongoose.Schema({
     },
     device_phone: {
       type: String,
-      required: false
+      required: false,
+      unique:true
     },
     address: {
       type: String,
