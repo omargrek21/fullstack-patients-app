@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import './Auth.css';
 
 class AuthForm extends Component {
   constructor(props) {
@@ -37,14 +38,40 @@ class AuthForm extends Component {
     } = this.props;
 
     return (
-      <div>
-        <div className="row justify-content-md-center text-center">
-          <div className="col-md-6">
-            <form onSubmit={this.handleSubmit}>
-              <h2>{heading}</h2>
-              {errors.message && (
-                <div className="alert alert-danger">{errors.message}</div>
-              )}
+      <div className='authContainer'>
+        <h2>{heading}</h2>
+        <form className='authForm' onSubmit={this.handleSubmit}>
+          {errors.message && (
+            <div className="errormsg"><i class="fas fa-exclamation-triangle"></i> {errors.message}</div>
+          )}
+          <div className='fieldContainer'> 
+            <label htmlFor="username"><i class="fas fa-user"></i></label>
+            <input
+              className='loginInputs'
+              autoComplete="off"
+              id="username"
+              name="username"
+              onChange={this.handleChange}
+              type="text"
+              placeholder="usuario"
+              value={username}
+            />
+          </div>
+          <div className='fieldContainer'> 
+            <label htmlFor="password"><i class="fas fa-lock"></i></label>
+            <input
+              className='loginInputs'
+              autoComplete="off"
+              id="password"
+              name="password"
+              placeholder="contraseña"
+              onChange={this.handleChange}
+              type="password"
+              value={password}
+            />
+          </div>
+          {signUp && (
+            <div>
               <label htmlFor="username">Username</label>
               <input
                 autoComplete="off"
@@ -55,40 +82,15 @@ class AuthForm extends Component {
                 type="text"
                 value={username}
               />
-              <label htmlFor="password">Password</label>
-              <input
-                autoComplete="off"
-                className="form-control"
-                id="password"
-                name="password"
-                onChange={this.handleChange}
-                type="password"
-                value={password}
-              />
-              {signUp && (
-                <div>
-                  <label htmlFor="username">Username</label>
-                  <input
-                    autoComplete="off"
-                    className="form-control"
-                    id="username"
-                    name="username"
-                    onChange={this.handleChange}
-                    type="text"
-                    value={username}
-                  />
-                  
-                </div>
-              )}
-              <button
-                type="submit"
-                className="btn btn-primary btn-block btn-lg"
-              >
-                {buttonText}
-              </button>
-            </form>
-          </div>
-        </div>
+              
+            </div>
+          )}
+          <button className='btn'
+            type="submit"
+          >
+            {buttonText}
+          </button>
+        </form>
       </div>
     );
   }

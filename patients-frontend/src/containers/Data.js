@@ -34,8 +34,8 @@ class Data extends Component {
       ));
      
       return(
-        <div style={{textAlign:'center'}}>
-        {this.props.currentUser.user.email === 'operez@grupov.com.ve' && (<Link to='/upload'> Upload new Data </Link>)}
+        <div style={{textAlign:'center', marginTop:'50px'}}>
+        {this.props.currentUser.user.role === 'admin' && (<Link className='upload' to='/upload'> <i class="fas fa-cloud-upload-alt"> <span className='lighter'> CARGAR DATA </span></i> </Link>)}
           {this.props.searchType.type === 'gps' ? (
             <div className="data">
               <h3> Usuario LifeAlert (TrackerGPS): {this.props.messages.patients} </h3>
@@ -78,7 +78,7 @@ class Data extends Component {
                     {patients}
                   </tbody>
               </table>
-              <h3> Beneficiarios: {this.props.messages.beneficiaries} </h3>
+              <h3 style={{fontWeight:'lighter', marginTop:'50px'}}> Beneficiarios: {this.props.messages.beneficiaries} </h3>
               <table className="dataTable">
                 <thead className="tableHead">
                   <tr>

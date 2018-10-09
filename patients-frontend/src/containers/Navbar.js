@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { logout } from "../store/actions/auth";
 import  Search  from './Search'
+import './Navbar.css';
+import logo from './logo-1.svg';
 
 class Navbar extends Component {
   logout = e => {
@@ -11,29 +13,20 @@ class Navbar extends Component {
   };
   render() {
     return (
-      <nav className="navbar navbar-expand">
-        <div className="container-fluid">
-          <div className="navbar-header">
-            
-          </div>
-          {this.props.currentUser.isAuthenticated ? (
-            <div>
-               <Search className="findForm" onData = {this.handleData} />
-               <ul className="nav navbar-nav navbar-right">             
-                <li>
-                  <a onClick={this.logout}>Log out</a>
-                </li>
-              </ul>
-            </div>            
-          ) : (
-            <ul className="nav navbar-nav navbar-right">              
-              <li>
-                <Link to="/signin">Inicia sesión</Link>
-              </li>
-            </ul>
-          )}
-        </div>
-      </nav>
+      <div>
+        {this.props.currentUser.isAuthenticated ? (
+          <ul className='header'>
+            <li className='logo-container'><img src={logo} alt="Venemergencia"/></li>
+            <li className='search'><Search className="findForm" onData = {this.handleData} /></li>
+            <li className='final-buttons'><a onClick={this.logout}>{this.props.currentUser.user.username} <i class="fas fa-power-off"></i></a></li>
+          </ul>
+        ) : (
+          <ul className='header'>
+            <li className='logo-container'><img src={logo} alt="Venemergencia"/></li>
+            <li className='final-buttons'><Link to="/signin"><i class="fas fa-sign-in-alt"></i></Link></li>
+          </ul>
+        )}
+      </div>
     );
   }
 }

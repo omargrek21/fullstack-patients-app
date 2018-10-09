@@ -1,0 +1,47 @@
+.header{
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    box-shadow: 0px 1px #ddd;
+}
+
+.final-buttons{
+    margin-right: 15px;
+    padding-right: 15px;
+    font-size: 20px;
+    cursor:pointer;
+}
+
+ul{
+    list-style: none;
+}
+
+.logo-container img{
+    width: 50px;
+    margin: 5px 0 0 20px;
+    cursor: pointer;
+}
+input{
+    border-bottom: none;
+    background: transparent;
+    border: 1px solid #E32726;
+    border-radius: 20px;
+    padding: 0px 30px;
+    height: 35px;
+}
+
+.tuleke{
+    background-color:transparent;
+    border:none;
+    color:#E32726;
+    cursor:pointer;
+    font-size: 20px;
+}
+
+.fa-sign-in-alt{
+    font-size: 30px;
+    color:#E32726 !important;
+}

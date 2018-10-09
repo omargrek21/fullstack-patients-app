@@ -27,8 +27,8 @@ const Main = props => {
                 removeError={removeError}
                 errors={errors}
                 onAuth={authUser}
-                buttonText="Iniciar sesión"
-                heading="Bienvenido de vuelta"
+                buttonText="Entrar"
+                heading="Bienvenido al sistema"
                 {...props}
               />
             );
