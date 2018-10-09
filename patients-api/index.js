@@ -12,7 +12,8 @@ const debug = require('debug')('http'),
     bodyParser = require('body-parser'),
     fileUpload = require('express-fileupload'),
     helmet = require('helmet'),
-    { loginRequired, ensureCorrectUser } = require("./middleware/auth");
+    { loginRequired, ensureCorrectUser } = require("./middleware/auth"),
+    path = require("path");
     
 //some middlewares
 app.use(cors());
@@ -25,6 +26,9 @@ app.use('/api/patients', loginRequired, patientRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/clients', clientRoutes);
 app.use('/api/tracker/patients',loginRequired, trackerRoutes);
+app.all('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 app.use(function(req,res,next){    
     let err = new Error("Not found");
     err.status = 404;
