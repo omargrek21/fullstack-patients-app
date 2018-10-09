@@ -115,7 +115,7 @@ async function saveToDb(data){
 
 async function updateInsuranceCount(cleanData,insurance_code, qty){
     if(cleanData==='true'){
-        return db.Client.update({insurance_code},{ $set: {'qty': 55}});
+        return db.Client.update({insurance_code},{ $set: {qty}});
     } else{
         return db.Client.update({insurance_code},{ $inc: {qty}});
     }
