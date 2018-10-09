@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
-mongoose.set('debug', true);
-mongoose.connect('mongodb://localhost/todo-api', {keepAlive: true});
+mongoose.set('debug', false);
+mongoose.connect('mongodb://localhost/validator', {keepAlive: true});
 
 mongoose.Promise = Promise; //allow Promise sintax
 module.exports.Patient = require('./patient');

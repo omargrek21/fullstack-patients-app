@@ -44,7 +44,6 @@ exports.update = async function(req,res,next){
 exports.remove = async function(req,res,next){
     try{
         const result = await db.Patient.remove(req.body);
-        console.log(result);
         if(result.n>0){
             return res.status(200).json({success:true,message:'Patient deleted successfully'});
         } else {

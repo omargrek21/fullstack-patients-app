@@ -27,7 +27,7 @@ app.use('/api/patients', loginRequired, patientRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/clients', clientRoutes);
 app.use('/api/tracker/patients',loginRequired, trackerRoutes);
-app.all('/*', (req, res) => {
+app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 app.use(function(req,res,next){    
