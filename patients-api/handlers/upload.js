@@ -52,13 +52,13 @@ async function processFile(csvPath,cleanData,res,next){
     
     try {
         let queries = [saveToDb(patientsData)];
-        let update_arr = [];
+        //let update_arr = [];
         for(let insurance in insurance_data){
             queries.push(updateInsuranceCount(cleanData,insurance,insurance_data[insurance]));
             queries.push(updateDate(insurance,insurance_data[insurance]));
         }
         
-        let results = await Promise.all([...update_arr]);
+        let results = await Promise.all([...queries]);
         let dataInserted = results[0];
         //debug(`${dataInserted.insertedCount} registros guardados en base de datos exitosamente`);
         const uploadObject = {
@@ -110,15 +110,22 @@ async function parseData(path, cleanData){
 }
 
 async function saveToDb(data){
+    
     return db.Patient.collection.insert(data);
+  
 }
 
 async function updateInsuranceCount(cleanData,insurance_code, qty){
-    if(cleanData==='true'){
+    try{
+      if(cleanData==='true'){
         return db.Client.update({insurance_code},{ $set: {qty}});
     } else{
         return db.Client.update({insurance_code},{ $inc: {qty}});
+    }  
+    }catch(e){
+        return e
     }
+    
 }
 
 async function updateDate(insurance_code,qty){
