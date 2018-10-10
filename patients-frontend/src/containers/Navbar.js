@@ -18,7 +18,7 @@ class Navbar extends Component {
           <ul className='header'>
             <li className='logo-container'><Link to="/"><img src={logo} alt="Venemergencia"/></Link></li>
             <li className='search'><Search className="findForm" onData = {this.handleData} /></li>
-            <li className='final-buttons'><a onClick={this.logout}>{this.props.currentUser.user.name} &nbsp; {this.props.currentUser.user.lastname} <i class="fas fa-power-off"></i></a></li>
+            <li className='final-buttons'><a onClick={this.logout}>{this.props.currentUser.user.name} {this.props.currentUser.user.lastname} <i class="fas fa-power-off"></i></a></li>
           </ul>
         ) : (
           <ul className='header'>

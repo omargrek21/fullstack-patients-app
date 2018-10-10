@@ -29,8 +29,8 @@ exports.find = async function(req,res,next){
     debug(`${req.method} ${req.url}`);
     const dni = req.params.patientDni;
     try{
-        if(dni.length > 8){//lifeAlert
-            const patients = await db.Customer.find({device_phone:dni, status:true });
+        if(dni.length > 9){//lifeAlert
+            const patients = await db.Customer.find({device_phone:dni});
             res.status(200).json({
                success: true,
                patients,
@@ -40,7 +40,7 @@ exports.find = async function(req,res,next){
             
         } else {//traditional
             const patientsData = await Promise.all([
-                db.Patient.find({dni, status:true}),
+                db.Patient.find({dni}),
                 db.Patient.find({'titular_dni': dni})
             ]);
             const patients = patientsData[0];
