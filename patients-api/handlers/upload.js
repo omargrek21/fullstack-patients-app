@@ -51,7 +51,8 @@ async function processFile(csvPath,res,next){
     try {
         debug(`Lenght patients array: ${patientsData.length}`);
         const uploadResult = await db.Patient.collection.insert(patientsData);
-        debug(`WriteResult: ${uploadResult.BulkWriteResult}`);
+        //debug(`WriteResult: ${uploadResult.BulkWriteResult}`);
+        console.log(uploadResult.BulkWriteResult);
         const records_inserted = uploadResult.insertedCount;
         const uploadObject = {
             success:true, 
