@@ -23,8 +23,12 @@ exports.upload = async function(req,res,next){
 
 async function processFile(csvPath,res,next){
     let patientsData = [];
+    let insurances = new Set();
+    let data = {};
     try {
-        patientsData = await parseData(csvPath);
+        data = await parseData(csvPath);
+        patientsData = data.patients;
+        insurances = data.insurances;
         debug(`Lectura del archivo ${csvPath} completada con ${patientsData.length} registros`);
     } catch(e){
         return next({
@@ -32,12 +36,25 @@ async function processFile(csvPath,res,next){
             message:`Error en la lectura del archivo en la linea ${e}, verifique su estructura`
         });
     }
+    
     try {
-        await saveToDb(patientsData);
+        for(let insurance_code of insurances){
+            await db.Patient.deleteMany({insurance_code});
+        }
+    } catch(e){
+        return next({
+            status:400,
+            message:`Error limpiando DB`
+        })
+    }
+    
+    try {
+        const uploadResult = await saveToDb(patientsData);
+        const records_inserted = uploadResult.insertedCount;
         const uploadObject = {
             success:true, 
             path: csvPath,
-            records_parsed: patientsData.length
+            records_inserted
         };
         res.status(200).json(uploadObject);
     } catch(e){
@@ -50,7 +67,8 @@ async function processFile(csvPath,res,next){
 
 async function parseData(path){
     return new Promise(function(resolve,reject){
-        let patientsArr = [];
+        let patients = [];
+        let insurances = new Set();
         let rowFlag = 0;
         var stream = fs.createReadStream(path);
         try{
@@ -58,10 +76,12 @@ async function parseData(path){
             .fromStream(stream, {headers: ["dni", "titular_dni", "full_name", "birth_date", "location", "type", "owner", "branch", "insurance_company", "insurance_code"]})
              .on("data", function(data){
                  rowFlag++;
-                 patientsArr.push(data);
+                 patients.push(data);
+                 insurances.add(data.insurance_code);
              })
              .on("end", function(){
-               resolve(patientsArr); 
+               let data = {patients,insurances};
+               resolve(data); 
              })
              .on("error", function(e){
                 reject(rowFlag);
@@ -72,15 +92,6 @@ async function parseData(path){
         }
     });
 }
-
 async function saveToDb(data){
-    await db.Patient.updateMany({}, { $set: { status: false } });
-    await data.forEach(async patient => {
-        const { dni, titular_dni, full_name, birth_date, location, type, owner, branch, insurance_company, insurance_code } = patient;
-        await db.Patient.update(
-          { dni, titular_dni, birth_date },
-          { $set: { dni, titular_dni, full_name, birth_date, location, type, owner, branch, insurance_company, insurance_code, "status": true, modified_date:Date.now() } },
-          { upsert: true }
-        );
-    });
+    return db.Patient.collection.insert(data)
 }

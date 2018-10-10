@@ -44,13 +44,13 @@ import { uploadPatients } from "../store/actions/patients";
             />
             <br/>
             <button className='uploadButton' type='submit'> <i class="fas fa-file-upload"> <span className='lighter'> Subir </span></i> </button>
+            {this.props.messages.message && (
+              <div> {this.props.messages.message.records_inserted} registros cargados con éxito</div>
+            )}
+            {this.props.errors.message && (
+              <div>{this.props.errors.message}</div>
+            )} 
           </form>
-          {this.props.messages.message && (
-            <div> {this.props.messages.message.records_parsed} registros cargados con éxito</div>
-          )}
-          {this.props.errors.message && (
-            <div>{this.props.errors.message}</div>
-          )} 
         </div>
       );
     }
