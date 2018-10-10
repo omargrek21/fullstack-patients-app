@@ -49,7 +49,9 @@ async function processFile(csvPath,res,next){
     }
     
     try {
-        const uploadResult = await saveToDb(patientsData);
+        debug(`Lenght patients array: ${patientsData.length}`);
+        const uploadResult = await db.Patient.collection.insert(patientsData);
+        debug(`WriteResult: ${uploadResult.WriteResult}`);
         const records_inserted = uploadResult.insertedCount;
         const uploadObject = {
             success:true, 
@@ -92,6 +94,4 @@ async function parseData(path){
         }
     });
 }
-async function saveToDb(data){
-    return db.Patient.collection.insert(data)
-}
+
