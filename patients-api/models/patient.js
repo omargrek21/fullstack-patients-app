@@ -15,7 +15,7 @@ var patientSchema = new mongoose.Schema({
     },
     birth_date: {
         type: String,
-        required: true
+        required: false
     },
     location: {
         type: String,
