@@ -49,7 +49,7 @@ async function processFile(csvPath,res,next){
     }
     
     try {
-        const uploadResult = await db.Patient.collection.insert(patientsData);
+        const uploadResult = await db.Patient.collection.insert(patientsData,{ ordered: false });
         const records_inserted = uploadResult.insertedCount;
         debug(`Finalizo con ${records_inserted} records insertados`);
         const uploadObject = {
