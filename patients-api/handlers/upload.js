@@ -61,7 +61,7 @@ async function processFile(csvPath,res,next){
     } catch(e){
         return next({
             status:400,
-            message:`Error guardando los registros en la base de datos`
+            message:`Error guardando los registros en la base de datos: ${e}`
         })
     } 
 }
