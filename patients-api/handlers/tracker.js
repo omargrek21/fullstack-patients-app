@@ -2,7 +2,8 @@ const db = require('../models');
 
 exports.list = async function(req,res,next){
     try{
-        let patients = await db.Patient.find({device_phone:{ $ne: null }});
+        //let patients = await db.Patient.find({device_phone:{ $ne: null }});
+        let patients = await db.Patient.find();
         return res.status(200).json({success:true,patients});
     } catch(err){
         return next({
@@ -14,7 +15,7 @@ exports.list = async function(req,res,next){
 
 exports.create = async function(req,res,next){
     try{
-        let patient_created = await db.Patient.create(req.body);
+        let patient_created = await db.Customer.create(req.body);
         return res.status(201).json({success:true,patient_created});
     } catch(err){
         return next({
@@ -27,7 +28,7 @@ exports.create = async function(req,res,next){
 exports.update = async function(req,res,next){
     try{
         const device_phone = req.body.device_phone;
-        const updated_patient = await db.Patient.findOneAndUpdate({device_phone}, req.body , {new:true});
+        const updated_patient = await db.Customer.findOneAndUpdate({device_phone}, req.body , {new:true});
         if(updated_patient){
             return res.status(200).json({success:true,updated_patient});
         } else {
@@ -43,7 +44,7 @@ exports.update = async function(req,res,next){
 
 exports.remove = async function(req,res,next){
     try{
-        const result = await db.Patient.remove(req.body);
+        const result = await db.Customer.remove(req.body);
         if(result.n>0){
             return res.status(200).json({success:true,message:'Patient deleted successfully'});
         } else {

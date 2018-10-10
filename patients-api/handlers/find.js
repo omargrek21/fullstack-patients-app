@@ -1,6 +1,6 @@
 const db = require('../models');
 const debug = require('debug')('/api/patients:search');
-const insuranceList = [
+/*const insuranceList = [
     {1: 'Seguros Caracas'},
     {2: 'Mercantil Seguros'},
     {3: 'Seguros la Previsora'},
@@ -22,15 +22,15 @@ const insuranceList = [
     {20: 'SIMBIO'},
     {21: 'TEBCA'},
     {22: 'VC Medios'},
-];
+];*/
 
 
 exports.find = async function(req,res,next){
     debug(`${req.method} ${req.url}`);
     const dni = req.params.patientDni;
     try{
-        if(dni.length > 8){//is phone number
-            const patients = await db.Patient.find({'device_phone':dni});
+        if(dni.length > 8){//lifeAlert
+            const patients = await db.Customer.find({device_phone:dni, status:true });
             res.status(200).json({
                success: true,
                patients,
@@ -38,9 +38,9 @@ exports.find = async function(req,res,next){
                type:'gps'
             });
             
-        } else {//is dni
+        } else {//traditional
             const patientsData = await Promise.all([
-                db.Patient.find({dni}),
+                db.Patient.find({dni, status:true}),
                 db.Patient.find({'titular_dni': dni})
             ]);
             const patients = patientsData[0];
@@ -49,7 +49,7 @@ exports.find = async function(req,res,next){
                success: true,
                patients,
                beneficiaries,
-               type:'health'
+               type:'traditional'
             });
         }
         

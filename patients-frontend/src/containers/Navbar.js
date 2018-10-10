@@ -16,9 +16,9 @@ class Navbar extends Component {
       <div>
         {this.props.currentUser.isAuthenticated ? (
           <ul className='header'>
-            <li className='logo-container'><img src={logo} alt="Venemergencia"/></li>
+            <li className='logo-container'><Link to="/"><img src={logo} alt="Venemergencia"/></Link></li>
             <li className='search'><Search className="findForm" onData = {this.handleData} /></li>
-            <li className='final-buttons'><a onClick={this.logout}>{this.props.currentUser.user.username} <i class="fas fa-power-off"></i></a></li>
+            <li className='final-buttons'><a onClick={this.logout}>{this.props.currentUser.user.name} &nbsp; {this.props.currentUser.user.lastname} <i class="fas fa-power-off"></i></a></li>
           </ul>
         ) : (
           <ul className='header'>

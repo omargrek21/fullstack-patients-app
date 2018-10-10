@@ -1,18 +1,19 @@
 const db = require('../models');
 const jwt = require('jsonwebtoken');
-const debug = require('debug')('/api/users:auth');
 
 exports.signin = async function(req,res,next){
     try {
         let user = await db.User.findOne({username: req.body.username});
-        let {id,username,role,email} = user;
+        let {id,username,role,email,name,lastname} = user;
         let auth = await user.comparePassword(req.body.password);
         if(auth){
-            let token = jwt.sign({id,username,role,email}, process.env.SECRET_KEY);
+            let token = jwt.sign({id,username,role,email,name,lastname}, process.env.SECRET_KEY);
             return res.status(200).json({
                 auth,
                 id,
                 username,
+                name,
+                lastname,
                 role,
                 email,
                 token
@@ -20,13 +21,13 @@ exports.signin = async function(req,res,next){
         } else {
             return next({
                 status:400,
-                message:"Invalid email/password"
+                message:"Usuario y/o contraseña incorrectos"
             })
         }   
     } catch (err) {
         return next({
             status:400,
-            message:"Invalid email/password"
+            message:"Usuario y/o contraseña incorrectos"
         })
     }
 }
@@ -34,29 +35,30 @@ exports.signin = async function(req,res,next){
 exports.signup = async function(req, res, next) {
     try{
         let user = await db.User.create(req.body);
-        let { id, username, email, role} = user;
+        let { id, username, email, role, name, lastname} = user;
         let token = jwt.sign(
-        {
-            id,
-            username,
-            role,
-            email,
-            email
-        },
-        process.env.SECRET_KEY
+            {
+                id,
+                username,
+                role,
+                email,
+                name,
+                lastname
+            },
+            process.env.SECRET_KEY
         );
         return res.status(200).json({
-        sucess:true,
-        id,
-        username,
-        email,
-        role,
-        token
+            sucess:true,
+            id,
+            username,
+            email,
+            role,
+            token
         });   
         
     } catch(err){
         if (err.code === 11000) {
-            err.message = "Sorry, that username is taken";
+            err.message = "Usuario ya existe";
           }
           return next({
             status: 400,
@@ -76,7 +78,7 @@ exports.list = async function(req, res, next) {
     } catch(err){
         return next({
             status:400,
-            message:"error retrieving users"
+            message:"error obteniendo los usuarios"
         })
     }
 }

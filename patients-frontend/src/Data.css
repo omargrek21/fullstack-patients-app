@@ -53,7 +53,6 @@ buttonRed{
     background: transparent;
     padding: 10px 35px;
     color: #E32726;
-    text-transform: uppercase;
     margin-top: 40px;
     border: 1px solid #E32726;
     margin-right: 30px;
@@ -61,4 +60,32 @@ buttonRed{
 
 .lighter{
     font-weight: lighter !important;
+}
+
+.uploadContainer{
+    display: flex;
+    flex-direction:row;
+    justify-content:center;
+}
+.uploadForm{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+.uploadInput{
+    border: none;
+    background: transparent;
+    border-bottom: 1px solid #E32726;
+    border-radius: 0px;
+    height: 35px;
+}
+
+.uploadButton{
+    background: transparent;
+    padding: 10px 35px;
+    color: #E32726;
+    margin-top: 0px;
+    border: 1px solid #E32726;
+    margin-right: 0px;
+    border-radius: 20px;
 }

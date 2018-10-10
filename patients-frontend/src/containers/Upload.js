@@ -7,8 +7,7 @@ import { uploadPatients } from "../store/actions/patients";
     constructor() {
       super();
       this.state = {
-        selectedFile: '',
-        cleanData: false
+        selectedFile: ''
       };
     }
 
@@ -18,9 +17,6 @@ import { uploadPatients } from "../store/actions/patients";
         case 'selectedFile':
           this.setState({ selectedFile: e.target.files[0] });
           break;
-        case 'cleanData':
-          this.setState({cleanData: e.target.checked});
-          break;
         default:
           this.setState({ [e.target.name]: e.target.value });
       }
@@ -28,19 +24,18 @@ import { uploadPatients } from "../store/actions/patients";
 
     onSubmit = (e) => {
       e.preventDefault();
-      const {selectedFile, cleanData } = this.state;
+      const { selectedFile } = this.state;
       let formData = new FormData();
       formData.append('selectedFile', selectedFile);
-      formData.append('cleanData', cleanData);
       this.props.uploadPatients(formData);
     }
 
     render() {
-      const { cleanData } = this.state;
       return (
-        <div>
-          <form onSubmit={this.onSubmit}>
+        <div className='uploadContainer'>
+          <form className="uploadForm" onSubmit={this.onSubmit}>
             <input
+              className="uploadInput"
               type="file"
               id = "selectedFile"
               name="selectedFile"
@@ -48,24 +43,13 @@ import { uploadPatients } from "../store/actions/patients";
               onChange={this.onChange}
             />
             <br/>
-            <label>
-              <input
-                type="checkbox"
-                name="cleanData"
-                value = {cleanData}
-                checked = {cleanData}
-                onChange={this.onChange}
-              />
-              Borrar data previa
-            </label>
-            <br/>
-            <button type="submit">Cargar archivo</button>
+            <button className='uploadButton' type='submit'> <i class="fas fa-file-upload"> <span className='lighter'> Subir </span></i> </button>
           </form>
           {this.props.messages.message && (
-            <div className="alert alert-danger"> {this.props.messages.message.records_inserted} records inserted successfully</div>
+            <div> {this.props.messages.message.records_parsed} registros cargados con éxito</div>
           )}
           {this.props.errors.message && (
-            <div className="alert alert-danger">{this.props.errors.message}</div>
+            <div>{this.props.errors.message}</div>
           )} 
         </div>
       );

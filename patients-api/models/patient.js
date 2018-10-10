@@ -45,43 +45,16 @@ var patientSchema = new mongoose.Schema({
       type: Date,
       default: Date.now()
     },
-    device_phone: {
-      type: String,
-      required: false,
-      unique:true
+    modified_date: {
+      type: Date,
+      default: Date.now()
     },
-    address: {
-      type: String,
-      required: false
-    },
-    patient_phone: {
-      type: String,
-      required: false
-    },
-    contact_phone_1: {
-      type: String,
-      required: false
-    },
-    contact_name_1: {
-      type: String,
-      required: false
-    },
-    relationship_1: {
-      type: String,
-      required: false
-    },
-    contact_phone_2: {
-      type: String,
-      required: false
-    },
-    contact_name_2: {
-      type: String,
-      required: false
-    },
-    relationship_2: {
-      type: String,
-      required: false
+    status: {
+        type: Boolean,
+        required: false,
+        default: true
     }
+    
 });
 
 var Patient = mongoose.model('Patient', patientSchema);
