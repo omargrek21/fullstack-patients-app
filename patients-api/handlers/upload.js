@@ -50,7 +50,7 @@ async function processFile(csvPath,res,next){
     
     try {
         const uploadResult = await db.Patient.insertMany(patientsData);
-        const records_inserted = uploadResult.insertedCount;
+        const records_inserted = uploadResult.length;
         debug(`Finalizo con ${records_inserted} records insertados`);
         const uploadObject = {
             success:true, 
