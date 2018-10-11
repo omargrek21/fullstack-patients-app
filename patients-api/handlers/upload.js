@@ -50,7 +50,7 @@ async function processFile(csvPath,res,next){
     
     try {
         let bulk = db.Patient.collection.initializeUnorderedBulkOp();
-        const batchSize = 10000;
+        const batchSize = 1000;
         let insertedCount = 0;
         let counter = 0;
         
@@ -59,8 +59,6 @@ async function processFile(csvPath,res,next){
                 // Execute the batch if batchsize reached
                 const partialResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
                 console.log("Internal bulk executed");
-                console.log('writeErrors',partialResult.toJSON().writeErrors);
-                console.log('writeConcernErrors',partialResult.toJSON().writeConcernErrors);
                 console.log("inserted by internal bulk: ", partialResult.nInserted);
                 insertedCount += partialResult.nInserted;
                 bulk = db.Patient.collection.initializeUnorderedBulkOp();
@@ -72,8 +70,6 @@ async function processFile(csvPath,res,next){
         }
         const uploadResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
         console.log("*External bulk executed*");
-        console.log('writeErrors',uploadResult.toJSON().writeErrors);
-        console.log('writeConcernErrors',uploadResult.toJSON().writeConcernErrors);
         const records_inserted = insertedCount + uploadResult.nInserted;
         
         /*patientsData.forEach((item,index) => {
