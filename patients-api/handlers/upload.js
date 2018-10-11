@@ -53,14 +53,15 @@ async function processFile(csvPath,res,next){
         const batchSize = 50000;
         let insertedCount = 0;
         let counter = 0;
+        let specialArr = [];
         
         for (let i = 0; i < patientsData.length; i++) {
             if(counter == batchSize){
-                // Execute the batch if batchsize reached
-                const partialResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
+                specialArr.push(bulk);
+                /*const partialResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
                 console.log("Internal bulk executed");
                 console.log("inserted by internal bulk: ", partialResult.nInserted);
-                insertedCount += partialResult.nInserted;
+                insertedCount += partialResult.nInserted;*/
                 bulk = db.Patient.collection.initializeUnorderedBulkOp();
                 counter = 0;
             } else {
@@ -68,9 +69,16 @@ async function processFile(csvPath,res,next){
                 counter++;
             }
         }
-        const uploadResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
-        console.log("*External bulk executed*");
-        const records_inserted = insertedCount + uploadResult.nInserted;
+        await specialArr.forEach(bulk => {
+             const tuleke = bulk.execute({ w: "majority", wtimeout: 1000 });
+             console.log("special bulk executed");
+             console.log("inserted by internal bulk: ", tuleke.nInserted);
+             insertedCount += tuleke.nInserted;
+        });
+       // const uploadResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
+        //console.log("*External bulk executed*");
+        //const records_inserted = insertedCount + uploadResult.nInserted;
+        const records_inserted = insertedCount;
         
         /*patientsData.forEach((item,index) => {
             bulk.insert(item);
@@ -108,7 +116,8 @@ async function parseData(path){
         let patients = [];
         let insurances = new Set();
         let rowFlag = 0;
-        var stream = fs.createReadStream(path);
+        let stream = fs.createReadStream(path);
+        
         try{
             csv
             .fromStream(stream, {headers: ["dni", "titular_dni", "full_name", "birth_date", "location", "type", "owner", "branch", "insurance_company", "insurance_code"]})
@@ -116,6 +125,7 @@ async function parseData(path){
                  rowFlag++;
                  patients.push(data);
                  insurances.add(data.insurance_code);
+                 
              })
              .on("end", function(){
                let data = {patients,insurances};
