@@ -50,7 +50,7 @@ async function processFile(csvPath,res,next){
     
     try {
         let bulk = db.Patient.collection.initializeUnorderedBulkOp();
-        const batchSize = 1000;
+        const batchSize = 20000;
         let insertedCount = 0;
         let counter = 0;
         
