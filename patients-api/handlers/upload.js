@@ -52,18 +52,21 @@ async function processFile(csvPath,res,next){
         let bulk = db.Patient.collection.initializeUnorderedBulkOp();
         const batchSize = 100000;
         let insertedCount = 0;
+        let counter = 0;
         
         for (let i = 0; i < patientsData.length; i++) {
-            
-            bulk.insert(patientsData[i]);
-            // Execute the batch if batchsize reached
-            if (i % batchSize == 0) {
+            if(counter == batchSize){
+                // Execute the batch if batchsize reached
                 const partialResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
                 console.log("ejecutó bulk interno");
-                insertedCount = partialResult.nInserted;
+                insertedCount += partialResult.nInserted;
                 console.log("inserted interno: ", insertedCount);
                 bulk = db.Patient.collection.initializeUnorderedBulkOp();
+                counter = 0;
+            } else {
+                bulk.insert(patientsData[i]);
             }
+            counter++;
         }
         const uploadResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
         console.log("ejecutó bulk externo");
