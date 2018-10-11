@@ -49,8 +49,12 @@ async function processFile(csvPath,res,next){
     }
     
     try {
-        const uploadResult = await db.Patient.insertMany(patientsData);
-        const records_inserted = uploadResult.length;
+        let bulk = db.Patient.collection.initializeUnorderedBulkOp();
+        patientsData.forEach(item => {
+            bulk.insert(item);
+        });
+        const uploadResult = await bulk.execute();
+        const records_inserted = uploadResult.nInserted;
         debug(`Finalizo con ${records_inserted} records insertados`);
         const uploadObject = {
             success:true, 
