@@ -24,12 +24,13 @@ exports.upload = async function(req,res,next){
 async function processFile(csvPath,res,next){
     let patientsData = [];
     let insurances = new Set();
-    let data = {};
+    let records_inserted = 0;
     try {
-        data = await parseData(csvPath);
-        patientsData = data.patients;
-        insurances = data.insurances;
-        debug(`Lectura del archivo ${csvPath} completada con ${patientsData.length} registros`);
+        records_inserted = await parseData(csvPath);
+        //patientsData = data.patients;
+        //insurances = data.insurances;
+        //debug(`Lectura del archivo ${csvPath} completada con ${patientsData.length} registros`);
+        debug(`insert completado con ${records_inserted} registros`);
     } catch(e){
         return next({
             status:400,
@@ -49,7 +50,7 @@ async function processFile(csvPath,res,next){
     } */
     
     try {
-        let bulk = db.Patient.collection.initializeUnorderedBulkOp();
+        /*let bulk = db.Patient.collection.initializeUnorderedBulkOp();
         const batchSize = 50000;
         let insertedCount = 0;
         let counter = 0;
@@ -62,7 +63,7 @@ async function processFile(csvPath,res,next){
                 console.log("Internal bulk executed");
                 console.log("inserted by internal bulk: ", partialResult.nInserted);
                 insertedCount += partialResult.nInserted;*/
-                bulk = db.Patient.collection.initializeUnorderedBulkOp();
+                /*bulk = db.Patient.collection.initializeUnorderedBulkOp();
                 counter = 0;
             } else {
                 bulk.insert(patientsData[i]);
@@ -75,11 +76,11 @@ async function processFile(csvPath,res,next){
              console.log("special bulk executed");
              console.log("inserted by internal bulk: ", tuleke.nInserted);
              insertedCount += tuleke.nInserted;
-        });
+        });*/
        // const uploadResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
         //console.log("*External bulk executed*");
         //const records_inserted = insertedCount + uploadResult.nInserted;
-        const records_inserted = insertedCount;
+       // const records_inserted = insertedCount;
         
         /*patientsData.forEach((item,index) => {
             bulk.insert(item);
@@ -97,7 +98,7 @@ async function processFile(csvPath,res,next){
      
         //const result = await db.Patient.collection.bulkWrite()
         //const records_inserted = 21;//uploadResult.nInserted;
-        debug(`Finalizo con ${records_inserted} records insertados`);
+        //debug(`Finalizo con ${records_inserted} records insertados`);
         const uploadObject = {
             success:true, 
             path: csvPath,
@@ -114,23 +115,36 @@ async function processFile(csvPath,res,next){
 
 async function parseData(path){
     return new Promise(function(resolve,reject){
-        let patients = [];
-        let insurances = new Set();
+        //let patients = [];
+        //let insurances = new Set();
         let rowFlag = 0;
         let stream = fs.createReadStream(path);
-        
+        const batchSize = 50000;
+        let insertedCount = 0;
+        let counter = 0;
+        let bulk = db.Patient.collection.initializeUnorderedBulkOp();
         try{
             csv
             .fromStream(stream, {headers: ["dni", "titular_dni", "full_name", "birth_date", "location", "type", "owner", "branch", "insurance_company", "insurance_code"]})
              .on("data", function(data){
                  rowFlag++;
-                 patients.push(data);
-                 insurances.add(data.insurance_code);
-                 
+                 //patients.push(data);
+                 //insurances.add(data.insurance_code);
+                 if(counter == batchSize){
+                     const partialResult = bulk.execute({ w: "majority", wtimeout: 1000 });
+                     insertedCount += partialResult.nInserted;
+                     bulk = db.Patient.collection.initializeUnorderedBulkOp();
+                     counter = 0;
+                 } else{
+                     bulk.insert(data);
+                     counter++;
+                 }
              })
              .on("end", function(){
-               let data = {patients,insurances};
-               resolve(data); 
+               //let data = {patients,insurances};
+               const partialResult = bulk.execute({ w: "majority", wtimeout: 1000 });
+               insertedCount += partialResult.nInserted;
+               resolve(insertedCount); 
              })
              .on("error", function(e){
                 reject(rowFlag);
