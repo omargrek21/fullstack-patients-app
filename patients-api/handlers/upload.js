@@ -49,12 +49,41 @@ async function processFile(csvPath,res,next){
     }
     
     try {
+        console.log("1");
         let bulk = db.Patient.collection.initializeUnorderedBulkOp();
-        patientsData.forEach(item => {
+        console.log("2");
+        const batchSize = 100000;
+        let insertedCount = 0;
+        
+        for (let i = 0; i < patientsData.length; i++) {
+            
+            bulk.insert(patientsData[i]);
+            // Execute the batch if batchsize reached
+            if (i % batchSize == 0) {
+                const partialResult = await bulk.execute();
+                insertedCount = partialResult.nInserted;
+                bulk = db.Patient.collection.initializeUnorderedBulkOp();
+            }
+        }
+        const uploadResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
+        const records_inserted = insertedCount + uploadResult.nInserted;
+        
+        /*patientsData.forEach((item,index) => {
             bulk.insert(item);
-        });
-        const uploadResult = await bulk.execute();
-        const records_inserted = uploadResult.nInserted;
+            if (index % batchSize == 0) {
+                await bulk.execute();
+            }
+        });*/
+        /*for(const patient of patientsData){
+            bulk.insert(item);
+            if (index % batchSize == 0) {
+                await bulk.execute();
+            }
+        }*/
+        //const uploadResult = await bulk.execute();
+     
+        //const result = await db.Patient.collection.bulkWrite()
+        //const records_inserted = 21;//uploadResult.nInserted;
         debug(`Finalizo con ${records_inserted} records insertados`);
         const uploadObject = {
             success:true, 
