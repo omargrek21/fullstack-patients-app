@@ -67,8 +67,8 @@ async function processFile(csvPath,res,next){
                 counter = 0;
             } else {
                 bulk.insert(patientsData[i]);
+                counter++;
             }
-            counter++;
         }
         const uploadResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
         console.log("*External bulk executed*");
