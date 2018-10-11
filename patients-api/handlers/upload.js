@@ -49,9 +49,7 @@ async function processFile(csvPath,res,next){
     }
     
     try {
-        console.log("1");
         let bulk = db.Patient.collection.initializeUnorderedBulkOp();
-        console.log("2");
         const batchSize = 100000;
         let insertedCount = 0;
         
@@ -60,12 +58,15 @@ async function processFile(csvPath,res,next){
             bulk.insert(patientsData[i]);
             // Execute the batch if batchsize reached
             if (i % batchSize == 0) {
-                const partialResult = await bulk.execute();
+                const partialResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
+                console.log("ejecutó bulk interno");
                 insertedCount = partialResult.nInserted;
+                console.log("inserted interno: ", insertedCount);
                 bulk = db.Patient.collection.initializeUnorderedBulkOp();
             }
         }
         const uploadResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
+        console.log("ejecutó bulk externo");
         const records_inserted = insertedCount + uploadResult.nInserted;
         
         /*patientsData.forEach((item,index) => {
