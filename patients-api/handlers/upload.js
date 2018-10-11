@@ -37,7 +37,7 @@ async function processFile(csvPath,res,next){
         });
     }
     
-    try {
+    /*try {
         for(let insurance_code of insurances){
             await db.Patient.deleteMany({insurance_code});
         }
@@ -46,7 +46,7 @@ async function processFile(csvPath,res,next){
             status:400,
             message:`Error limpiando DB`
         })
-    }
+    } */
     
     try {
         let bulk = db.Patient.collection.initializeUnorderedBulkOp();
