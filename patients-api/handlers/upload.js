@@ -69,6 +69,7 @@ async function processFile(csvPath,res,next){
                 counter++;
             }
         }
+        specialArr.push(bulk);
         await specialArr.forEach(bulk => {
              const tuleke = bulk.execute({ w: "majority", wtimeout: 1000 });
              console.log("special bulk executed");
