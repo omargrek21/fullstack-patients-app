@@ -26,11 +26,10 @@ async function processFile(csvPath,res,next){
     let insurances = new Set();
     let records_inserted = 0;
     try {
-        records_inserted = await parseData(csvPath);
-        //patientsData = data.patients;
-        //insurances = data.insurances;
-        //debug(`Lectura del archivo ${csvPath} completada con ${patientsData.length} registros`);
-        debug(`insert completado con ${records_inserted} registros`);
+        const data = await parseData(csvPath);
+        patientsData = data.patients;
+        insurances = data.insurances;
+        debug(`Lectura del archivo ${csvPath} completada con ${patientsData.length} registros`);
     } catch(e){
         return next({
             status:400,
@@ -50,59 +49,45 @@ async function processFile(csvPath,res,next){
     } */
     
     try {
-        /*let bulk = db.Patient.collection.initializeUnorderedBulkOp();
+        let bulk = db.Patient.collection.initializeUnorderedBulkOp();
         const batchSize = 50000;
-        let insertedCount = 0;
+        let records_inserted = 0;
         let counter = 0;
-        let specialArr = [];
         
         for (let i = 0; i < patientsData.length; i++) {
             if(counter == batchSize){
-                specialArr.push(bulk);
-                /*const partialResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
+                const partialResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
                 console.log("Internal bulk executed");
                 console.log("inserted by internal bulk: ", partialResult.nInserted);
-                insertedCount += partialResult.nInserted;*/
-                /*bulk = db.Patient.collection.initializeUnorderedBulkOp();
+                records_inserted += partialResult.nInserted;
+                bulk = db.Patient.collection.initializeUnorderedBulkOp();
                 counter = 0;
             } else {
                 bulk.insert(patientsData[i]);
                 counter++;
             }
         }
-        specialArr.push(bulk);
-        await specialArr.forEach(bulk => {
-             const tuleke = bulk.execute({ w: "majority", wtimeout: 1000 });
-             console.log("special bulk executed");
-             console.log("inserted by internal bulk: ", tuleke.nInserted);
-             insertedCount += tuleke.nInserted;
-        });*/
-       // const uploadResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
-        //console.log("*External bulk executed*");
-        //const records_inserted = insertedCount + uploadResult.nInserted;
-       // const records_inserted = insertedCount;
         
-        /*patientsData.forEach((item,index) => {
-            bulk.insert(item);
-            if (index % batchSize == 0) {
-                await bulk.execute();
-            }
-        });*/
-        /*for(const patient of patientsData){
-            bulk.insert(item);
-            if (index % batchSize == 0) {
-                await bulk.execute();
-            }
-        }*/
-        //const uploadResult = await bulk.execute();
-     
-        //const result = await db.Patient.collection.bulkWrite()
-        //const records_inserted = 21;//uploadResult.nInserted;
-        //debug(`Finalizo con ${records_inserted} records insertados`);
+        const uploadResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
+        console.log("External bulk executed");
+        console.log("inserted by external bulk: ", uploadResult.nInserted);
+        records_inserted += uploadResult.nInserted;
+        console.log("compare started");
+        
+        const not_added_data = patientsData.filter(async patient => {
+            const { dni, titular_dni, birth_date } = patient;
+            const found = await db.Patient.find({dni, titular_dni, birth_date});
+            if(!found.length > 0){
+                return true;
+            } 
+            return false;
+        });
+        
         const uploadObject = {
             success:true, 
             path: csvPath,
-            records_inserted
+            records_inserted,
+            not_added_data
         };
         res.status(200).json(uploadObject);
     } catch(e){
@@ -115,41 +100,25 @@ async function processFile(csvPath,res,next){
 
 async function parseData(path){
     return new Promise(function(resolve,reject){
-        //let patients = [];
-        //let insurances = new Set();
+        let patients = [];
+        let insurances = new Set();
         let rowFlag = 0;
         let stream = fs.createReadStream(path);
-        const batchSize = 50000;
-        let insertedCount = 0;
-        let counter = 0;
-        let bulk = db.Patient.collection.initializeUnorderedBulkOp();
         try{
             csv
             .fromStream(stream, {headers: ["dni", "titular_dni", "full_name", "birth_date", "location", "type", "owner", "branch", "insurance_company", "insurance_code"]})
              .on("data", function(data){
                  rowFlag++;
-                 //patients.push(data);
-                 //insurances.add(data.insurance_code);
-                 if(counter == batchSize){
-                     const partialResult = bulk.execute({ w: "majority", wtimeout: 1000 });
-                     insertedCount += partialResult.nInserted;
-                     bulk = db.Patient.collection.initializeUnorderedBulkOp();
-                     counter = 0;
-                 } else{
-                     bulk.insert(data);
-                     counter++;
-                 }
+                 patients.push(data);
+                 insurances.add(data.insurance_code);
              })
              .on("end", function(){
-               //let data = {patients,insurances};
-               const partialResult = bulk.execute({ w: "majority", wtimeout: 1000 });
-               insertedCount += partialResult.nInserted;
-               resolve(insertedCount); 
+               let data = {patients,insurances};
+               resolve(data); 
              })
              .on("error", function(e){
                 reject(rowFlag);
              });
-            
         } catch(e) {
             reject(rowFlag);
         }
