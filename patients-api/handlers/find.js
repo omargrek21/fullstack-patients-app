@@ -50,8 +50,8 @@ exports.find = async function(req,res,next){
                 console.log("entro en if patients");
             }
             
-            if(patients.length > 0 ){
-                console.log("entro en if patients.lenght>0");
+            if(!patients.length > 0 ){
+                console.log("entro en if !patients.lenght>0 como quiero");
             }
             const beneficiaries = patientsData[1].filter(patient =>patient.titular_dni != patient.dni);
             res.status(200).json({
