@@ -74,8 +74,8 @@ async function processFile(csvPath,res,next){
         
         let not_added_data = [];
         for (let i = 0; i < patientsData.length; i++) {
-            const { dni, titular_dni, birth_date } = patientsData[i];
-            const found = await db.Patient.find({dni,titular_dni, birth_date});
+            const { id } = patientsData[i];
+            const found = await db.Patient.findById(id);
             if(found.length == 0){
                 not_added_data.push(patientsData[i]);
             }
