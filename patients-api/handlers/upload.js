@@ -12,16 +12,18 @@ exports.upload = async function(req,res,next){
             message:"No has cargado ningún archivo"
         });
     } 
-    let csvFile = req.files.selectedFile;
+    debug("POST request recibido");
+    const csvFile = req.files.selectedFile;
     const csvPath = UPLOAD_PATH + csvFile.name;
+    const cleanData = req.body.cleanData;
     csvFile.mv(csvPath, (err) => {
         if (err) return next(err);
-        debug("Archivo recibido y guardado exitosamente en:", UPLOAD_PATH);
-        processFile(csvPath,res,next);
+        debug(`Archivo recibido y guardado exitosamente en ${UPLOAD_PATH} `);
+        processFile(csvPath,cleanData,res,next);
     });
 }
 
-async function processFile(csvPath,res,next){
+async function processFile(csvPath,cleanData,res,next){
     let patientsData = [];
     let insurances = new Set();
     let records_inserted = 0;
@@ -29,24 +31,26 @@ async function processFile(csvPath,res,next){
         const data = await parseData(csvPath);
         patientsData = data.patients;
         insurances = data.insurances;
-        debug(`Lectura del archivo ${csvPath} completada con ${patientsData.length} registros`);
+        debug(`Archivo parseado con ${patientsData.length} registros`);
     } catch(e){
         return next({
             status:400,
             message:`Error en la lectura del archivo en la linea ${e}, verifique su estructura`
         });
     }
-    
-    /*try {
-        for(let insurance_code of insurances){
-            await db.Patient.deleteMany({insurance_code});
+    if(cleanData === 'true'){
+        try {
+            for(let insurance_code of insurances){
+                await db.Patient.deleteMany({insurance_code});
+                debug(`Insurance_code ${insurance_code} limpiado exitosamente`);
+            }
+        } catch(e){
+            return next({
+                status:400,
+                message:`Error limpiando DB`
+            });
         }
-    } catch(e){
-        return next({
-            status:400,
-            message:`Error limpiando DB`
-        })
-    } */
+    }
     
     try {
         let bulk = db.Patient.collection.initializeUnorderedBulkOp();
@@ -56,8 +60,8 @@ async function processFile(csvPath,res,next){
         for (let i = 0; i < patientsData.length; i++) {
             if(counter == batchSize){
                 const partialResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
-                console.log("Internal bulk executed");
-                console.log("inserted by internal bulk: ", partialResult.nInserted);
+                debug("Bulk interno ejecutado");
+                debug(`Registros insertados: ${partialResult.nInserted}`);
                 records_inserted += partialResult.nInserted;
                 bulk = db.Patient.collection.initializeUnorderedBulkOp();
                 bulk.insert(patientsData[i]);
@@ -68,25 +72,15 @@ async function processFile(csvPath,res,next){
             }
         }
         const uploadResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
-        console.log("External bulk executed");
-        console.log("inserted by external bulk: ", uploadResult.nInserted);
         records_inserted += uploadResult.nInserted;
-        /*console.log("compare started");
+        debug("Bulk externo ejecutado");
+        debug(`Total registros insertados: ${records_inserted}`);
         
-        let not_added_data = [];
-        for (let i = 0; i < patientsData.length; i++) {
-            const { _id } = patientsData[i];
-            const found = await db.Patient.findById(_id);
-            if(!found){
-                not_added_data.push(patientsData[i]);
-            }
-        }
-        console.log(not_added_data);
-        console.log("compare finished");*/
         const uploadObject = {
             success:true, 
             path: csvPath,
-            records_inserted
+            records_inserted,
+            cleanData
         };
         res.status(200).json(uploadObject);
     } catch(e){
