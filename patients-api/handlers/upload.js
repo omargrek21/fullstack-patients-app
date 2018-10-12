@@ -53,7 +53,6 @@ async function processFile(csvPath,res,next){
         const batchSize = 50000;
         let records_inserted = 0;
         let counter = 0;
-        
         for (let i = 0; i < patientsData.length; i++) {
             if(counter == batchSize){
                 const partialResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
@@ -67,22 +66,21 @@ async function processFile(csvPath,res,next){
                 counter++;
             }
         }
-        
         const uploadResult = await bulk.execute({ w: "majority", wtimeout: 1000 });
         console.log("External bulk executed");
         console.log("inserted by external bulk: ", uploadResult.nInserted);
         records_inserted += uploadResult.nInserted;
         console.log("compare started");
         
-        const not_added_data = await patientsData.filter(async patient => {
-            const { dni, titular_dni, birth_date } = await patient;
-            const found = await db.Patient.find({dni, titular_dni, birth_date});
-            if(!found.length > 0){
-                return true;
-            } 
-            return false;
-        });
-        
+        let not_added_data = [];
+        for (let i = 0; i < patientsData.length; i++) {
+            const { dni, titular_dni, birth_date } = patientsData[i];
+            const found = await db.Patient.find({dni,titular_dni, birth_date});
+            if(found.length == 0){
+                not_added_data.push(patientsData[i]);
+            }
+        }
+        console.log("compare finished");
         const uploadObject = {
             success:true, 
             path: csvPath,
