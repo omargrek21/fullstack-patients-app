@@ -60,7 +60,8 @@ async function processFile(csvPath,res,next){
                 console.log("inserted by internal bulk: ", partialResult.nInserted);
                 records_inserted += partialResult.nInserted;
                 bulk = db.Patient.collection.initializeUnorderedBulkOp();
-                counter = 0;
+                bulk.insert(patientsData[i]);
+                counter = 1;
             } else {
                 bulk.insert(patientsData[i]);
                 counter++;
@@ -70,7 +71,7 @@ async function processFile(csvPath,res,next){
         console.log("External bulk executed");
         console.log("inserted by external bulk: ", uploadResult.nInserted);
         records_inserted += uploadResult.nInserted;
-        console.log("compare started");
+        /*console.log("compare started");
         
         let not_added_data = [];
         for (let i = 0; i < patientsData.length; i++) {
@@ -81,12 +82,11 @@ async function processFile(csvPath,res,next){
             }
         }
         console.log(not_added_data);
-        console.log("compare finished");
+        console.log("compare finished");*/
         const uploadObject = {
             success:true, 
             path: csvPath,
-            records_inserted,
-            not_added_data
+            records_inserted
         };
         res.status(200).json(uploadObject);
     } catch(e){
