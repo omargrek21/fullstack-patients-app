@@ -76,10 +76,11 @@ async function processFile(csvPath,res,next){
         for (let i = 0; i < patientsData.length; i++) {
             const { _id } = patientsData[i];
             const found = await db.Patient.findById(_id);
-            if(found.length == 0){
+            if(!found){
                 not_added_data.push(patientsData[i]);
             }
         }
+        console.log(not_added_data);
         console.log("compare finished");
         const uploadObject = {
             success:true, 
@@ -92,7 +93,7 @@ async function processFile(csvPath,res,next){
         return next({
             status:400,
             message:`Error guardando los registros en la base de datos: ${e}`
-        })
+        });
     } 
 }
 
