@@ -74,8 +74,8 @@ async function processFile(csvPath,res,next){
         records_inserted += uploadResult.nInserted;
         console.log("compare started");
         
-        const not_added_data = patientsData.filter(async patient => {
-            const { dni, titular_dni, birth_date } = patient;
+        const not_added_data = await patientsData.filter(async patient => {
+            const { dni, titular_dni, birth_date } = await patient;
             const found = await db.Patient.find({dni, titular_dni, birth_date});
             if(!found.length > 0){
                 return true;
