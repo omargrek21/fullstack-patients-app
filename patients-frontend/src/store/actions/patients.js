@@ -46,7 +46,11 @@ export const findPatients = dni => dispatch => {
       dispatch(removeError());
     })
     .catch(err => {
-        dispatch(addError(err.message));
+        if(err){
+          dispatch(addError(err.message));
+        } else{
+          dispatch(addError('El servidor no está respondiendo'));
+        }
         dispatch(resetPatients());
         dispatch(resetBeneficiaries());
     });

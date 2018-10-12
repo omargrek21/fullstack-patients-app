@@ -35,7 +35,7 @@ class Data extends Component {
      
       return(
         <div style={{textAlign:'center', marginTop:'50px'}}>
-        {this.props.currentUser.user.role === 'admin' && (<Link className='upload' to='/upload'> <i class="fas fa-cloud-upload-alt"> <span className='lighter'> CARGAR DATA </span></i> </Link>)}
+        {this.props.currentUser.user.role === 'admin' && (<Link className='upload' to='/upload'> <i className="fas fa-cloud-upload-alt"> <span className='lighter'> CARGAR DATA </span></i> </Link>)}
           {this.props.searchType.type === 'gps' ? (
             <div className="data">
               <h3> Usuario LifeAlert (TrackerGPS): {this.props.messages.patients} </h3>

@@ -18,12 +18,12 @@ class Navbar extends Component {
           <ul className='header'>
             <li className='logo-container'><Link to="/"><img src={logo} alt="Venemergencia"/></Link></li>
             <li className='search'><Search className="findForm" onData = {this.handleData} /></li>
-            <li className='final-buttons'><a onClick={this.logout}>{this.props.currentUser.user.name} {this.props.currentUser.user.lastname} <i class="fas fa-power-off"></i></a></li>
+            <li className='final-buttons'><a onClick={this.logout}>{this.props.currentUser.user.name} {this.props.currentUser.user.lastname} <i className="fas fa-power-off"></i></a></li>
           </ul>
         ) : (
           <ul className='header'>
             <li className='logo-container'><img src={logo} alt="Venemergencia"/></li>
-            <li className='final-buttons'><Link to="/signin"><i class="fas fa-sign-in-alt"></i></Link></li>
+            <li className='final-buttons'><Link to="/signin"><i className="fas fa-sign-in-alt"></i></Link></li>
           </ul>
         )}
       </div>

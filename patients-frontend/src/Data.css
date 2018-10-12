@@ -89,3 +89,8 @@ buttonRed{
     margin-right: 0px;
     border-radius: 20px;
 }
+
+.deletePrevious{
+    display: flex;
+    align-items:center;
+}

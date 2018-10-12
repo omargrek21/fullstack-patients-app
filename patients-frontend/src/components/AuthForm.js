@@ -42,10 +42,10 @@ class AuthForm extends Component {
         <h2>{heading}</h2>
         <form className='authForm' onSubmit={this.handleSubmit}>
           {errors.message && (
-            <div className="errormsg"><i class="fas fa-exclamation-triangle"></i> {errors.message}</div>
+            <div className="errormsg"><i className="fas fa-exclamation-triangle"></i> {errors.message}</div>
           )}
           <div className='fieldContainer'> 
-            <label htmlFor="username"><i class="fas fa-user"></i></label>
+            <label htmlFor="username"><i className="fas fa-user"></i></label>
             <input
               className='loginInputs'
               autoComplete="off"
@@ -58,7 +58,7 @@ class AuthForm extends Component {
             />
           </div>
           <div className='fieldContainer'> 
-            <label htmlFor="password"><i class="fas fa-lock"></i></label>
+            <label htmlFor="password"><i className="fas fa-lock"></i></label>
             <input
               className='loginInputs'
               autoComplete="off"

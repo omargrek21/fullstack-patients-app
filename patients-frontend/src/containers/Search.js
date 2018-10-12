@@ -32,7 +32,7 @@ import { findPatients } from "../store/actions/patients";
               value={dni}
               onChange={(e) => this.setState({[e.target.name]: e.target.value })}
             />
-            <button className='tuleke' type="submit"><i class="fas fa-search"></i></button>
+            <button className='tuleke' type="submit"><i className="fas fa-search"></i></button>
           </form>
           {this.props.errors.message && (
             <div className="alert alert-danger">{this.props.errors.message}</div>

@@ -7,7 +7,8 @@ import { uploadPatients } from "../store/actions/patients";
     constructor() {
       super();
       this.state = {
-        selectedFile: ''
+        selectedFile: '',
+        cleanData: false
       };
     }
 
@@ -17,6 +18,9 @@ import { uploadPatients } from "../store/actions/patients";
         case 'selectedFile':
           this.setState({ selectedFile: e.target.files[0] });
           break;
+        case 'cleanData':
+          this.setState({cleanData: e.target.checked});
+          break;
         default:
           this.setState({ [e.target.name]: e.target.value });
       }
@@ -24,13 +28,15 @@ import { uploadPatients } from "../store/actions/patients";
 
     onSubmit = (e) => {
       e.preventDefault();
-      const { selectedFile } = this.state;
+      const { selectedFile, cleanData} = this.state;
       let formData = new FormData();
       formData.append('selectedFile', selectedFile);
+      formData.append('cleanData', cleanData);
       this.props.uploadPatients(formData);
     }
 
     render() {
+      const { cleanData } = this.state;
       return (
         <div className='uploadContainer'>
           <form className="uploadForm" onSubmit={this.onSubmit}>
@@ -43,7 +49,18 @@ import { uploadPatients } from "../store/actions/patients";
               onChange={this.onChange}
             />
             <br/>
-            <button className='uploadButton' type='submit'> <i class="fas fa-file-upload"> <span className='lighter'> Subir </span></i> </button>
+            <label className="deletePrevious">
+              <input
+                type="checkbox"
+                name="cleanData"
+                value = {cleanData}
+                checked = {cleanData}
+                onChange={this.onChange}
+              />
+              Eliminar data previa
+            </label>
+            <br/>
+            <button className='uploadButton' type='submit'> <i className="fas fa-file-upload"> <span className='lighter'> Subir </span></i> </button>
             {this.props.messages.message && (
               <div> {this.props.messages.message.records_inserted} registros cargados con éxito</div>
             )}
