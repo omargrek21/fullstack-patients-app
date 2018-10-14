@@ -1,5 +1,5 @@
 import { apiCall, setTokenHeader } from "../../services/api";
-import { SET_CURRENT_USER } from "../actionTypes";
+import { SET_CURRENT_USER, SET_LOADING } from "../actionTypes";
 import { addError, removeError } from "./errors";
 
 export function setCurrentUser(user) {
@@ -8,6 +8,11 @@ export function setCurrentUser(user) {
     user
   };
 }
+
+export const setLoading = loading => ({
+  type: SET_LOADING,
+  loading
+});
 
 
 export function setAuthorizationToken(token) {
@@ -19,11 +24,14 @@ export function logout() {
     localStorage.clear();
     setAuthorizationToken(false);
     dispatch(setCurrentUser({}));
+    dispatch(removeError());
   };
 }
 
 export function authUser(type, userData) {
   return dispatch => {
+    dispatch(setLoading(true));
+    dispatch(removeError());
     // wrap our thunk in a promise so we can wait for the API call
     return new Promise((resolve, reject) => {
       return apiCall("post", `/api/users/${type}`, userData)
@@ -32,10 +40,12 @@ export function authUser(type, userData) {
           setAuthorizationToken(token);
           dispatch(setCurrentUser(user));
           dispatch(removeError());
+          dispatch(setLoading(false));
           resolve(); // indicate that the API call succeeded
         })
         .catch(err => {
           dispatch(addError(err.message));
+          dispatch(setLoading(false));
           reject(); // indicate the API call failed
         });
     });

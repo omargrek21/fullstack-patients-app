@@ -5,6 +5,7 @@ import patients from './patients';
 import messages from './messages';
 import beneficiaries from './beneficiaries';
 import searchType from './searchType';
+import loading from './loading';
 
 const rootReducer = combineReducers({
    currentUser,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
    patients,
    beneficiaries,
    messages,
-   searchType
+   searchType,
+   loading
 });
 
 export default rootReducer;

@@ -5,7 +5,7 @@ import PatientGps from '../components/PatientGps';
 import '../Data.css';
 import { Link } from "react-router-dom";
 
-class Data extends Component {  
+class Data extends Component { 
       render() {
       let patients = [];
       if(this.props.searchType.type === 'gps'){
@@ -114,6 +114,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, null)(
-  Data
-);
+export default connect(mapStateToProps)(Data);

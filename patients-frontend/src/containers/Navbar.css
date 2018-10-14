@@ -45,3 +45,21 @@ input{
     font-size: 30px;
     color:#E32726 !important;
 }
+
+.searchContainer{
+    display:flex;
+    flex-direction:column;
+}
+
+.searchForm{
+    display:flex;
+    flex-direction:row;
+    justify-content: space-around;
+}
+
+.errormsgSearch{
+    color: #ff0033;
+    margin-bottom: 0px;
+    margin-top:5px;
+    text-align: center;
+}

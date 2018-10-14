@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const debug = require('debug')('/api/middlewares:auth');
 
 exports.loginRequired = function(req, res, next) {
   try {
@@ -8,11 +7,11 @@ exports.loginRequired = function(req, res, next) {
       if (decoded) {
         next(); 
       } else {
-        return next({ status: 401, message: "Please Log In First" });
+        return next({ status: 401, message: "Usuario no autenticado" });
       }
     });
   } catch (e) {
-    return next({ status: 401, message: "Please Log In First" });
+    return next({ status: 401, message: "Usuario no autenticado" });
   }
 };
 
@@ -20,14 +19,13 @@ exports.ensureCorrectUser = function(req, res, next) {
   try {
     const token = req.headers.authorization.split(" ")[1];
     jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
-        //role === 1 for admin
-      if (decoded && decoded.role === 1) {
+      if (decoded && decoded.role === 'admin') {
         return next();
       } else {
-        return next({ status: 401, message: "Unauthorized" });
+        return next({ status: 401, message: "Usuario no autorizado" });
       }
     });
   } catch (e) {
-    return next({ status: 401, message: "Unauthorized" });
+    return next({ status: 401, message: "Usuario no autorizado" });
   }
 };

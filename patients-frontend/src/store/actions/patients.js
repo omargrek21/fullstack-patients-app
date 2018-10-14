@@ -1,5 +1,5 @@
 import { apiCall } from "../../services/api";
-import { LOAD_PATIENTS, RESET_PATIENTS, LOAD_BENEFICIARIES, RESET_BENEFICIARIES, SET_TYPE } from "../actionTypes";
+import { LOAD_PATIENTS, RESET_PATIENTS, LOAD_BENEFICIARIES, RESET_BENEFICIARIES, SET_TYPE, SET_LOADING } from "../actionTypes";
 import { addError, removeError } from "./errors";
 import { queryResult, addPatients } from "./messages";
 
@@ -27,7 +27,14 @@ export const setType = mode => ({
   mode
 });
 
+export const setLoading = loading => ({
+  type: SET_LOADING,
+  loading
+});
+
 export const findPatients = dni => dispatch => {  
+  dispatch(setLoading(true));
+  dispatch(removeError());
   return apiCall("get", `/api/patients/${dni}`)
     .then(res => {
       const type = res.type;
@@ -44,6 +51,7 @@ export const findPatients = dni => dispatch => {
           processTraditional(res,dispatch);
       }
       dispatch(removeError());
+      dispatch(setLoading(false));
     })
     .catch(err => {
         if(err){
@@ -53,17 +61,22 @@ export const findPatients = dni => dispatch => {
         }
         dispatch(resetPatients());
         dispatch(resetBeneficiaries());
+        dispatch(setLoading(false));
     });
 };
 
 export const uploadPatients = data => dispatch => {
+  dispatch(setLoading(true));
+  dispatch(removeError());
   return apiCall("post", "/api/patients", data)
     .then(res => {
       dispatch(addPatients(res));
       dispatch(removeError());
+      dispatch(setLoading(false));
     })
     .catch(err => {
         dispatch(addError(err.message));
+        dispatch(setLoading(false));
     });
 };
 

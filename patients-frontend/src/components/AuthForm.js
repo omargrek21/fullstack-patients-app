@@ -1,5 +1,13 @@
 import React, { Component } from "react";
 import './Auth.css';
+import { css } from 'react-emotion';
+import { BeatLoader } from 'react-spinners';
+
+const override = css`
+    display: block;
+    margin: 0 auto;
+    border-color: red;
+`;
 
 class AuthForm extends Component {
   constructor(props) {
@@ -34,12 +42,20 @@ class AuthForm extends Component {
       signUp,
       heading,
       buttonText,
-      errors
+      errors,
+      loading
     } = this.props;
 
     return (
       <div className='authContainer'>
         <h2>{heading}</h2>
+        <BeatLoader
+          className={override}
+          sizeUnit={"px"}
+          size={15}
+          color={'#E32726'}
+          loading={loading.loading}
+        />
         <form className='authForm' onSubmit={this.handleSubmit}>
           {errors.message && (
             <div className="errormsg"><i className="fas fa-exclamation-triangle"></i> {errors.message}</div>

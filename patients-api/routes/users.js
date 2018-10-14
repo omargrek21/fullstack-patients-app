@@ -1,11 +1,11 @@
 const express = require('express'),
     router = express.Router(),
-    db = require('../models'),
-    { signup, signin, list } = require('../handlers/auth');
+    { signup, signin, list } = require('../handlers/auth'),
+    { loginRequired, ensureCorrectUser } = require("../middleware/auth");
 
 router.post('/signin',signin);
-router.post('/signup',signup);
-router.get('/getAll',list);
+router.post('/signup', loginRequired, ensureCorrectUser, signup);
+router.get('/getAll', loginRequired, ensureCorrectUser, list);
 
 module.exports = router;
 

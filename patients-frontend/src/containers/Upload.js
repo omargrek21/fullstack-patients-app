@@ -64,9 +64,6 @@ import { uploadPatients } from "../store/actions/patients";
             {this.props.messages.message && (
               <div> {this.props.messages.message.records_inserted} registros cargados con éxito</div>
             )}
-            {this.props.errors.message && (
-              <div>{this.props.errors.message}</div>
-            )} 
           </form>
         </div>
       );

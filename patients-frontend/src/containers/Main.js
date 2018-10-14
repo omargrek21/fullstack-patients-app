@@ -9,7 +9,7 @@ import Data from "./Data";
 import Upload from "./Upload"
 
 const Main = props => {
-  const { authUser, errors, removeError } = props;
+  const { authUser, errors, removeError, loading } = props;
   return (
     <div className="container">
       <Switch>
@@ -28,6 +28,7 @@ const Main = props => {
                 errors={errors}
                 onAuth={authUser}
                 buttonText="Entrar"
+                loading = {loading}
                 heading="Bienvenido al sistema"
                 {...props}
               />
@@ -48,7 +49,8 @@ const Main = props => {
 function mapStateToProps(state) {
   return {
     currentUser: state.currentUser,
-    errors: state.errors
+    errors: state.errors,
+    loading: state.loading
   };
 }
 

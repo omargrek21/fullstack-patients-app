@@ -65,7 +65,7 @@ exports.find = async function(req,res,next){
 exports.empty = async function(req,res,next){
     return next({
         status:400,
-        message:"Debes introducir una cédula o número de teléfono"
+        message:"CI o teléfono invalido"
     })
 }
 
