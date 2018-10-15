@@ -2,8 +2,7 @@ import { LOAD_BENEFICIARIES, RESET_BENEFICIARIES } from "../actionTypes";
 
 const beneficiaries = (state = [], action) => {
   switch (action.type) {
-    case LOAD_BENEFICIARIES:
-      console.log(action);
+    case LOAD_BENEFICIARIES:      
       return [...action.beneficiaries];
     case RESET_BENEFICIARIES:
       return [];

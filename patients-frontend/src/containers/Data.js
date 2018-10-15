@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import PatientItem from '../components/PatientItem';
 import PatientGps from '../components/PatientGps';
-import '../Data.css';
+import './Data.css';
 import { Link } from "react-router-dom";
 
 class Data extends Component { 
