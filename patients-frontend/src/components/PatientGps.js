@@ -1,5 +1,5 @@
 import React from 'react';
-import '../Data.css';
+import '../containers/Data.css';
 
 const PatientGps = ({color,dni,address,full_name,birth_date,device_phone,patient_phone,contact_name_1,contact_name_2,contact_name_3,contact_phone_1,contact_phone_2,contact_phone_3,relationship_1,relationship_2,relationship_3}) => (
     <tr className={color}>
